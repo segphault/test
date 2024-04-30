@@ -31,10 +31,18 @@ export class UserResource extends APIResource {
   /**
    * This can only be done by the logged in user.
    */
-  update(params: UserUpdateParams, options?: Core.RequestOptions): Core.APIPromise<void> {
-    const { path_username, body_username, ...body } = params;
-    return this._client.put(`/user/${path_username}`, {
-      body: { username: body_username, ...body },
+  update(user: string, body?: UserUpdateParams, options?: Core.RequestOptions): Core.APIPromise<void>;
+  update(user: string, options?: Core.RequestOptions): Core.APIPromise<void>;
+  update(
+    user: string,
+    body: UserUpdateParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<void> {
+    if (isRequestOptions(body)) {
+      return this.update(user, {}, body);
+    }
+    return this._client.put(`/user/${user}`, {
+      body,
       ...options,
       headers: { Accept: '*/*', ...options?.headers },
     });
@@ -129,48 +137,22 @@ export interface UserCreateParams {
 }
 
 export interface UserUpdateParams {
-  /**
-   * Path param: name that need to be deleted
-   */
-  path_username: string;
-
-  /**
-   * Body param:
-   */
   id?: number;
 
-  /**
-   * Body param:
-   */
   email?: string;
 
-  /**
-   * Body param:
-   */
   firstName?: string;
 
-  /**
-   * Body param:
-   */
   lastName?: string;
 
-  /**
-   * Body param:
-   */
   password?: string;
 
-  /**
-   * Body param:
-   */
   phone?: string;
 
-  /**
-   * Body param:
-   */
-  body_username?: string;
+  username?: string;
 
   /**
-   * Body param: User Status
+   * User Status
    */
   userStatus?: number;
 }
