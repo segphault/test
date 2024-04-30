@@ -31,17 +31,21 @@ export class UserResource extends APIResource {
   /**
    * This can only be done by the logged in user.
    */
-  update(user: string, body?: UserUpdateParams, options?: Core.RequestOptions): Core.APIPromise<void>;
-  update(user: string, options?: Core.RequestOptions): Core.APIPromise<void>;
   update(
-    user: string,
+    existingUsername: string,
+    body?: UserUpdateParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<void>;
+  update(existingUsername: string, options?: Core.RequestOptions): Core.APIPromise<void>;
+  update(
+    existingUsername: string,
     body: UserUpdateParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
   ): Core.APIPromise<void> {
     if (isRequestOptions(body)) {
-      return this.update(user, {}, body);
+      return this.update(existingUsername, {}, body);
     }
-    return this._client.put(`/user/${user}`, {
+    return this._client.put(`/user/${existingUsername}`, {
       body,
       ...options,
       headers: { Accept: '*/*', ...options?.headers },
