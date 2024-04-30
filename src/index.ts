@@ -4,9 +4,20 @@ import * as Core from './core';
 import * as Errors from './error';
 import { type Agent } from './_shims/index';
 import * as Uploads from './uploads';
+import * as qs from 'qs';
 import * as API from 'petstore-fix/resources/index';
 
 export interface ClientOptions {
+  /**
+   * Defaults to process.env['PETSTORE_FIX_API_KEY'].
+   */
+  apiKey?: string | undefined;
+
+  /**
+   * Defaults to process.env['PETSTORE_FIX_OAUTH_ACCESS_TOKEN'].
+   */
+  oauthAccessToken?: string | undefined;
+
   /**
    * Override the default base URL for the API, e.g., "https://api.example.com/v2/"
    *
@@ -66,12 +77,17 @@ export interface ClientOptions {
 
 /** API Client for interfacing with the Petstore Fix API. */
 export class PetstoreFix extends Core.APIClient {
+  apiKey: string;
+  oauthAccessToken: string;
+
   private _options: ClientOptions;
 
   /**
    * API Client for interfacing with the Petstore Fix API.
    *
-   * @param {string} [opts.baseURL=process.env['PETSTORE_FIX_BASE_URL'] ?? http://petstore.swagger.io/v1] - Override the default base URL for the API.
+   * @param {string | undefined} [opts.apiKey=process.env['PETSTORE_FIX_API_KEY'] ?? undefined]
+   * @param {string | undefined} [opts.oauthAccessToken=process.env['PETSTORE_FIX_OAUTH_ACCESS_TOKEN'] ?? undefined]
+   * @param {string} [opts.baseURL=process.env['PETSTORE_FIX_BASE_URL'] ?? https://petstore3.swagger.io/api/v3] - Override the default base URL for the API.
    * @param {number} [opts.timeout=1 minute] - The maximum amount of time (in milliseconds) the client will wait for a response before timing out.
    * @param {number} [opts.httpAgent] - An HTTP agent used to manage HTTP(s) connections.
    * @param {Core.Fetch} [opts.fetch] - Specify a custom `fetch` function implementation.
@@ -79,10 +95,28 @@ export class PetstoreFix extends Core.APIClient {
    * @param {Core.Headers} opts.defaultHeaders - Default headers to include with every request to the API.
    * @param {Core.DefaultQuery} opts.defaultQuery - Default query parameters to include with every request to the API.
    */
-  constructor({ baseURL = Core.readEnv('PETSTORE_FIX_BASE_URL'), ...opts }: ClientOptions = {}) {
+  constructor({
+    baseURL = Core.readEnv('PETSTORE_FIX_BASE_URL'),
+    apiKey = Core.readEnv('PETSTORE_FIX_API_KEY'),
+    oauthAccessToken = Core.readEnv('PETSTORE_FIX_OAUTH_ACCESS_TOKEN'),
+    ...opts
+  }: ClientOptions = {}) {
+    if (apiKey === undefined) {
+      throw new Errors.PetstoreFixError(
+        "The PETSTORE_FIX_API_KEY environment variable is missing or empty; either provide it, or instantiate the PetstoreFix client with an apiKey option, like new PetstoreFix({ apiKey: 'My API Key' }).",
+      );
+    }
+    if (oauthAccessToken === undefined) {
+      throw new Errors.PetstoreFixError(
+        "The PETSTORE_FIX_OAUTH_ACCESS_TOKEN environment variable is missing or empty; either provide it, or instantiate the PetstoreFix client with an oauthAccessToken option, like new PetstoreFix({ oauthAccessToken: 'My OAuth Access Token' }).",
+      );
+    }
+
     const options: ClientOptions = {
+      apiKey,
+      oauthAccessToken,
       ...opts,
-      baseURL: baseURL || `http://petstore.swagger.io/v1`,
+      baseURL: baseURL || `https://petstore3.swagger.io/api/v3`,
     };
 
     super({
@@ -93,9 +127,14 @@ export class PetstoreFix extends Core.APIClient {
       fetch: options.fetch,
     });
     this._options = options;
+
+    this.apiKey = apiKey;
+    this.oauthAccessToken = oauthAccessToken;
   }
 
   pets: API.Pets = new API.Pets(this);
+  store: API.Store = new API.Store(this);
+  user: API.UserResource = new API.UserResource(this);
 
   protected override defaultQuery(): Core.DefaultQuery | undefined {
     return this._options.defaultQuery;
@@ -106,6 +145,14 @@ export class PetstoreFix extends Core.APIClient {
       ...super.defaultHeaders(opts),
       ...this._options.defaultHeaders,
     };
+  }
+
+  protected override authHeaders(opts: Core.FinalRequestOptions): Core.Headers {
+    return { api_key: this.apiKey };
+  }
+
+  protected override stringifyQuery(query: Record<string, unknown>): string {
+    return qs.stringify(query, { arrayFormat: 'comma' });
   }
 
   static PetstoreFix = this;
@@ -151,8 +198,30 @@ export namespace PetstoreFix {
   export import RequestOptions = Core.RequestOptions;
 
   export import Pets = API.Pets;
+  export import APIResponse = API.APIResponse;
   export import Pet = API.Pet;
-  export import PetListParams = API.PetListParams;
+  export import PetFindByStatusResponse = API.PetFindByStatusResponse;
+  export import PetFindByTagsResponse = API.PetFindByTagsResponse;
+  export import PetCreateParams = API.PetCreateParams;
+  export import PetUpdateParams = API.PetUpdateParams;
+  export import PetFindByStatusParams = API.PetFindByStatusParams;
+  export import PetFindByTagsParams = API.PetFindByTagsParams;
+  export import PetUpdateByIDParams = API.PetUpdateByIDParams;
+  export import PetUploadImageParams = API.PetUploadImageParams;
+
+  export import Store = API.Store;
+  export import StoreInventoryResponse = API.StoreInventoryResponse;
+  export import StoreCreateOrderParams = API.StoreCreateOrderParams;
+
+  export import UserResource = API.UserResource;
+  export import User = API.User;
+  export import UserLoginResponse = API.UserLoginResponse;
+  export import UserCreateParams = API.UserCreateParams;
+  export import UserListWithCreateParams = API.UserListWithCreateParams;
+  export import UserLoginParams = API.UserLoginParams;
+  export import UserUpdateUsernameParams = API.UserUpdateUsernameParams;
+
+  export import Order = API.Order;
 }
 
 export default PetstoreFix;

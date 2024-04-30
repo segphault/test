@@ -7,54 +7,267 @@ import * as PetsAPI from 'petstore-fix/resources/pets';
 
 export class Pets extends APIResource {
   /**
-   * Create a pet
+   * Add a new pet to the store
    */
-  create(options?: Core.RequestOptions): Core.APIPromise<void> {
-    return this._client.post('/pets', { ...options, headers: { Accept: '*/*', ...options?.headers } });
+  create(body: PetCreateParams, options?: Core.RequestOptions): Core.APIPromise<Pet> {
+    return this._client.post('/pet', { body, ...options });
   }
 
   /**
-   * Info for a specific pet
+   * Returns a single pet
    */
-  retrieve(petId: string, options?: Core.RequestOptions): Core.APIPromise<Pet> {
-    return this._client.get(`/pets/${petId}`, options);
+  retrieve(petId: number, options?: Core.RequestOptions): Core.APIPromise<Pet> {
+    return this._client.get(`/pet/${petId}`, options);
   }
 
   /**
-   * List all pets
+   * Update an existing pet by Id
    */
-  list(query?: PetListParams, options?: Core.RequestOptions): Core.APIPromise<Pets>;
-  list(options?: Core.RequestOptions): Core.APIPromise<Pets>;
-  list(
-    query: PetListParams | Core.RequestOptions = {},
+  update(body: PetUpdateParams, options?: Core.RequestOptions): Core.APIPromise<Pet> {
+    return this._client.put('/pet', { body, ...options });
+  }
+
+  /**
+   * delete a pet
+   */
+  delete(petId: number, options?: Core.RequestOptions): Core.APIPromise<void> {
+    return this._client.delete(`/pet/${petId}`, {
+      ...options,
+      headers: { Accept: '*/*', ...options?.headers },
+    });
+  }
+
+  /**
+   * Multiple status values can be provided with comma separated strings
+   */
+  findByStatus(
+    query?: PetFindByStatusParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<Pets> {
+  ): Core.APIPromise<PetFindByStatusResponse>;
+  findByStatus(options?: Core.RequestOptions): Core.APIPromise<PetFindByStatusResponse>;
+  findByStatus(
+    query: PetFindByStatusParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<PetFindByStatusResponse> {
     if (isRequestOptions(query)) {
-      return this.list({}, query);
+      return this.findByStatus({}, query);
     }
-    return this._client.get('/pets', { query, ...options });
+    return this._client.get('/pet/findByStatus', { query, ...options });
   }
+
+  /**
+   * Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3
+   * for testing.
+   */
+  findByTags(
+    query?: PetFindByTagsParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<PetFindByTagsResponse>;
+  findByTags(options?: Core.RequestOptions): Core.APIPromise<PetFindByTagsResponse>;
+  findByTags(
+    query: PetFindByTagsParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<PetFindByTagsResponse> {
+    if (isRequestOptions(query)) {
+      return this.findByTags({}, query);
+    }
+    return this._client.get('/pet/findByTags', { query, ...options });
+  }
+
+  /**
+   * Updates a pet in the store with form data
+   */
+  updateById(
+    petId: number,
+    params?: PetUpdateByIDParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<void>;
+  updateById(petId: number, options?: Core.RequestOptions): Core.APIPromise<void>;
+  updateById(
+    petId: number,
+    params: PetUpdateByIDParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<void> {
+    if (isRequestOptions(params)) {
+      return this.updateById(petId, {}, params);
+    }
+    const { name, status } = params;
+    return this._client.post(`/pet/${petId}`, {
+      query: { name, status },
+      ...options,
+      headers: { Accept: '*/*', ...options?.headers },
+    });
+  }
+
+  /**
+   * uploads an image
+   */
+  uploadImage(
+    petId: number,
+    params?: PetUploadImageParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<APIResponse>;
+  uploadImage(petId: number, options?: Core.RequestOptions): Core.APIPromise<APIResponse>;
+  uploadImage(
+    petId: number,
+    params: PetUploadImageParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<APIResponse> {
+    if (isRequestOptions(params)) {
+      return this.uploadImage(petId, {}, params);
+    }
+    const { additionalMetadata } = params;
+    return this._client.post(`/pet/${petId}/uploadImage`, { query: { additionalMetadata }, ...options });
+  }
+}
+
+export interface APIResponse {
+  code?: number;
+
+  message?: string;
+
+  type?: string;
 }
 
 export interface Pet {
-  id: number;
-
   name: string;
 
-  tag?: string;
+  photoUrls: Array<string>;
+
+  id?: number;
+
+  category?: Pet.Category;
+
+  /**
+   * pet status in the store
+   */
+  status?: 'available' | 'pending' | 'sold';
+
+  tags?: Array<Pet.Tag>;
 }
 
-export type Pets = Array<Pet>;
+export namespace Pet {
+  export interface Category {
+    id?: number;
 
-export interface PetListParams {
+    name?: string;
+  }
+
+  export interface Tag {
+    id?: number;
+
+    name?: string;
+  }
+}
+
+export type PetFindByStatusResponse = Array<Pet>;
+
+export type PetFindByTagsResponse = Array<Pet>;
+
+export interface PetCreateParams {
+  name: string;
+
+  photoUrls: Array<string>;
+
+  id?: number;
+
+  category?: PetCreateParams.Category;
+
   /**
-   * How many items to return at one time (max 100)
+   * pet status in the store
    */
-  limit?: number;
+  status?: 'available' | 'pending' | 'sold';
+
+  tags?: Array<PetCreateParams.Tag>;
+}
+
+export namespace PetCreateParams {
+  export interface Category {
+    id?: number;
+
+    name?: string;
+  }
+
+  export interface Tag {
+    id?: number;
+
+    name?: string;
+  }
+}
+
+export interface PetUpdateParams {
+  name: string;
+
+  photoUrls: Array<string>;
+
+  id?: number;
+
+  category?: PetUpdateParams.Category;
+
+  /**
+   * pet status in the store
+   */
+  status?: 'available' | 'pending' | 'sold';
+
+  tags?: Array<PetUpdateParams.Tag>;
+}
+
+export namespace PetUpdateParams {
+  export interface Category {
+    id?: number;
+
+    name?: string;
+  }
+
+  export interface Tag {
+    id?: number;
+
+    name?: string;
+  }
+}
+
+export interface PetFindByStatusParams {
+  /**
+   * Status values that need to be considered for filter
+   */
+  status?: 'available' | 'pending' | 'sold';
+}
+
+export interface PetFindByTagsParams {
+  /**
+   * Tags to filter by
+   */
+  tags?: Array<string>;
+}
+
+export interface PetUpdateByIDParams {
+  /**
+   * Name of pet that needs to be updated
+   */
+  name?: string;
+
+  /**
+   * Status of pet that needs to be updated
+   */
+  status?: string;
+}
+
+export interface PetUploadImageParams {
+  /**
+   * Additional Metadata
+   */
+  additionalMetadata?: string;
 }
 
 export namespace Pets {
+  export import APIResponse = PetsAPI.APIResponse;
   export import Pet = PetsAPI.Pet;
-  export import Pets = PetsAPI.Pets;
-  export import PetListParams = PetsAPI.PetListParams;
+  export import PetFindByStatusResponse = PetsAPI.PetFindByStatusResponse;
+  export import PetFindByTagsResponse = PetsAPI.PetFindByTagsResponse;
+  export import PetCreateParams = PetsAPI.PetCreateParams;
+  export import PetUpdateParams = PetsAPI.PetUpdateParams;
+  export import PetFindByStatusParams = PetsAPI.PetFindByStatusParams;
+  export import PetFindByTagsParams = PetsAPI.PetFindByTagsParams;
+  export import PetUpdateByIDParams = PetsAPI.PetUpdateByIDParams;
+  export import PetUploadImageParams = PetsAPI.PetUploadImageParams;
 }
