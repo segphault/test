@@ -28,7 +28,7 @@ import PetstoreFix from 'petstore-fix';
 const petstoreFix = new PetstoreFix();
 
 async function main() {
-  const pet = await petstoreFix.pets.retrieve('REPLACE_ME');
+  const pet = await petstoreFix.pets.create({ name: 'doggie', photoUrls: ['string', 'string', 'string'] });
 
   console.log(pet.id);
 }
@@ -47,7 +47,8 @@ import PetstoreFix from 'petstore-fix';
 const petstoreFix = new PetstoreFix();
 
 async function main() {
-  const pet: PetstoreFix.Pet = await petstoreFix.pets.retrieve('REPLACE_ME');
+  const params: PetstoreFix.PetCreateParams = { name: 'doggie', photoUrls: ['string', 'string', 'string'] };
+  const pet: PetstoreFix.Pet = await petstoreFix.pets.create(params);
 }
 
 main();
@@ -64,15 +65,17 @@ a subclass of `APIError` will be thrown:
 <!-- prettier-ignore -->
 ```ts
 async function main() {
-  const pet = await petstoreFix.pets.retrieve('REPLACE_ME').catch(async (err) => {
-    if (err instanceof PetstoreFix.APIError) {
-      console.log(err.status); // 400
-      console.log(err.name); // BadRequestError
-      console.log(err.headers); // {server: 'nginx', ...}
-    } else {
-      throw err;
-    }
-  });
+  const pet = await petstoreFix.pets
+    .create({ name: 'doggie', photoUrls: ['string', 'string', 'string'] })
+    .catch(async (err) => {
+      if (err instanceof PetstoreFix.APIError) {
+        console.log(err.status); // 400
+        console.log(err.name); // BadRequestError
+        console.log(err.headers); // {server: 'nginx', ...}
+      } else {
+        throw err;
+      }
+    });
 }
 
 main();
@@ -104,10 +107,11 @@ You can use the `maxRetries` option to configure or disable this:
 // Configure the default for all requests:
 const petstoreFix = new PetstoreFix({
   maxRetries: 0, // default is 2
+  oauthAccessToken: 'My OAuth Access Token',
 });
 
 // Or, configure per-request:
-await petstoreFix.pets.retrieve('REPLACE_ME', {
+await petstoreFix.pets.create({ name: 'doggie', photoUrls: ['string', 'string', 'string'] }, {
   maxRetries: 5,
 });
 ```
@@ -121,10 +125,11 @@ Requests time out after 1 minute by default. You can configure this with a `time
 // Configure the default for all requests:
 const petstoreFix = new PetstoreFix({
   timeout: 20 * 1000, // 20 seconds (default is 1 minute)
+  oauthAccessToken: 'My OAuth Access Token',
 });
 
 // Override per-request:
-await petstoreFix.pets.retrieve('REPLACE_ME', {
+await petstoreFix.pets.create({ name: 'doggie', photoUrls: ['string', 'string', 'string'] }, {
   timeout: 5 * 1000,
 });
 ```
@@ -145,11 +150,15 @@ You can also use the `.withResponse()` method to get the raw `Response` along wi
 ```ts
 const petstoreFix = new PetstoreFix();
 
-const response = await petstoreFix.pets.retrieve('REPLACE_ME').asResponse();
+const response = await petstoreFix.pets
+  .create({ name: 'doggie', photoUrls: ['string', 'string', 'string'] })
+  .asResponse();
 console.log(response.headers.get('X-My-Header'));
 console.log(response.statusText); // access the underlying Response object
 
-const { data: pet, response: raw } = await petstoreFix.pets.retrieve('REPLACE_ME').withResponse();
+const { data: pet, response: raw } = await petstoreFix.pets
+  .create({ name: 'doggie', photoUrls: ['string', 'string', 'string'] })
+  .withResponse();
 console.log(raw.headers.get('X-My-Header'));
 console.log(pet.id);
 ```
@@ -252,12 +261,16 @@ import { HttpsProxyAgent } from 'https-proxy-agent';
 // Configure the default for all requests:
 const petstoreFix = new PetstoreFix({
   httpAgent: new HttpsProxyAgent(process.env.PROXY_URL),
+  oauthAccessToken: 'My OAuth Access Token',
 });
 
 // Override per-request:
-await petstoreFix.pets.retrieve('REPLACE_ME', {
-  httpAgent: new http.Agent({ keepAlive: false }),
-});
+await petstoreFix.pets.create(
+  { name: 'doggie', photoUrls: ['string', 'string', 'string'] },
+  {
+    httpAgent: new http.Agent({ keepAlive: false }),
+  },
+);
 ```
 
 ## Semantic versioning
