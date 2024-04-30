@@ -14,11 +14,6 @@ export interface ClientOptions {
   apiKey?: string | undefined;
 
   /**
-   * Defaults to process.env['PETSTORE_FIX_OAUTH_ACCESS_TOKEN'].
-   */
-  oauthAccessToken?: string | undefined;
-
-  /**
    * Override the default base URL for the API, e.g., "https://api.example.com/v2/"
    *
    * Defaults to process.env['PETSTORE_BASE_URL'].
@@ -78,7 +73,6 @@ export interface ClientOptions {
 /** API Client for interfacing with the Petstore API. */
 export class Petstore extends Core.APIClient {
   apiKey: string;
-  oauthAccessToken: string;
 
   private _options: ClientOptions;
 
@@ -86,7 +80,6 @@ export class Petstore extends Core.APIClient {
    * API Client for interfacing with the Petstore API.
    *
    * @param {string | undefined} [opts.apiKey=process.env['PETSTORE_FIX_API_KEY'] ?? undefined]
-   * @param {string | undefined} [opts.oauthAccessToken=process.env['PETSTORE_FIX_OAUTH_ACCESS_TOKEN'] ?? undefined]
    * @param {string} [opts.baseURL=process.env['PETSTORE_BASE_URL'] ?? https://petstore3.swagger.io/api/v3] - Override the default base URL for the API.
    * @param {number} [opts.timeout=1 minute] - The maximum amount of time (in milliseconds) the client will wait for a response before timing out.
    * @param {number} [opts.httpAgent] - An HTTP agent used to manage HTTP(s) connections.
@@ -98,7 +91,6 @@ export class Petstore extends Core.APIClient {
   constructor({
     baseURL = Core.readEnv('PETSTORE_BASE_URL'),
     apiKey = Core.readEnv('PETSTORE_FIX_API_KEY'),
-    oauthAccessToken = Core.readEnv('PETSTORE_FIX_OAUTH_ACCESS_TOKEN'),
     ...opts
   }: ClientOptions = {}) {
     if (apiKey === undefined) {
@@ -106,15 +98,9 @@ export class Petstore extends Core.APIClient {
         "The PETSTORE_FIX_API_KEY environment variable is missing or empty; either provide it, or instantiate the Petstore client with an apiKey option, like new Petstore({ apiKey: 'My API Key' }).",
       );
     }
-    if (oauthAccessToken === undefined) {
-      throw new Errors.PetstoreError(
-        "The PETSTORE_FIX_OAUTH_ACCESS_TOKEN environment variable is missing or empty; either provide it, or instantiate the Petstore client with an oauthAccessToken option, like new Petstore({ oauthAccessToken: 'My OAuth Access Token' }).",
-      );
-    }
 
     const options: ClientOptions = {
       apiKey,
-      oauthAccessToken,
       ...opts,
       baseURL: baseURL || `https://petstore3.swagger.io/api/v3`,
     };
@@ -129,7 +115,6 @@ export class Petstore extends Core.APIClient {
     this._options = options;
 
     this.apiKey = apiKey;
-    this.oauthAccessToken = oauthAccessToken;
   }
 
   pets: API.Pets = new API.Pets(this);
