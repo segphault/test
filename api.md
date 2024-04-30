@@ -53,7 +53,7 @@ Methods:
 
 - <code title="post /user">client.user.<a href="./src/resources/user.ts">create</a>({ ...params }) -> void</code>
 - <code title="get /user/{username}">client.user.<a href="./src/resources/user.ts">retrieve</a>(username) -> User</code>
-- <code title="put /user/{username}">client.user.<a href="./src/resources/user.ts">update</a>({ ...params }) -> void</code>
+- <code title="put /user/{username}">client.user.<a href="./src/resources/user.ts">update</a>(user, { ...params }) -> void</code>
 - <code title="delete /user/{username}">client.user.<a href="./src/resources/user.ts">delete</a>(username) -> void</code>
 - <code title="post /user/createWithList">client.user.<a href="./src/resources/user.ts">createWithList</a>([ ...items ]) -> User</code>
 - <code title="get /user/login">client.user.<a href="./src/resources/user.ts">login</a>({ ...params }) -> string</code>

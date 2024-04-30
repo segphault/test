@@ -64,8 +64,8 @@ describe('resource user', () => {
     );
   });
 
-  test('update: only required params', async () => {
-    const responsePromise = petstore.user.update({ path_username: 'string' });
+  test('update', async () => {
+    const responsePromise = petstore.user.update('string');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -75,18 +75,31 @@ describe('resource user', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('update: required and optional params', async () => {
-    const response = await petstore.user.update({
-      path_username: 'string',
-      id: 10,
-      email: 'john@email.com',
-      firstName: 'John',
-      lastName: 'James',
-      password: '12345',
-      phone: '12345',
-      body_username: 'theUser',
-      userStatus: 1,
-    });
+  test('update: request options instead of params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(petstore.user.update('string', { path: '/_stainless_unknown_path' })).rejects.toThrow(
+      Petstore.NotFoundError,
+    );
+  });
+
+  test('update: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      petstore.user.update(
+        'string',
+        {
+          id: 10,
+          email: 'john@email.com',
+          firstName: 'John',
+          lastName: 'James',
+          password: '12345',
+          phone: '12345',
+          username: 'theUser',
+          userStatus: 1,
+        },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(Petstore.NotFoundError);
   });
 
   test('delete', async () => {
