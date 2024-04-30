@@ -1,8 +1,8 @@
 {
   "name": "petstore-fix",
   "version": "0.0.1-alpha.0",
-  "description": "The official TypeScript library for the Petstore Fix API",
-  "author": "Petstore Fix <dev-feedback@petstore-fix.com>",
+  "description": "The official TypeScript library for the Petstore API",
+  "author": "Petstore <dev-feedback@petstore-fix.com>",
   "types": "dist/index.d.ts",
   "main": "dist/index.js",
   "type": "commonjs",

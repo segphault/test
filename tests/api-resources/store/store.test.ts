@@ -1,9 +1,9 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import PetstoreFix from 'petstore-fix';
+import Petstore from 'petstore-fix';
 import { Response } from 'node-fetch';
 
-const petstoreFix = new PetstoreFix({
+const petstore = new Petstore({
   apiKey: 'My API Key',
   oauthAccessToken: 'My OAuth Access Token',
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
@@ -11,7 +11,7 @@ const petstoreFix = new PetstoreFix({
 
 describe('resource store', () => {
   test('createOrder', async () => {
-    const responsePromise = petstoreFix.store.createOrder();
+    const responsePromise = petstore.store.createOrder();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -23,15 +23,15 @@ describe('resource store', () => {
 
   test('createOrder: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(petstoreFix.store.createOrder({ path: '/_stainless_unknown_path' })).rejects.toThrow(
-      PetstoreFix.NotFoundError,
+    await expect(petstore.store.createOrder({ path: '/_stainless_unknown_path' })).rejects.toThrow(
+      Petstore.NotFoundError,
     );
   });
 
   test('createOrder: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      petstoreFix.store.createOrder(
+      petstore.store.createOrder(
         {
           id: 10,
           complete: true,
@@ -42,11 +42,11 @@ describe('resource store', () => {
         },
         { path: '/_stainless_unknown_path' },
       ),
-    ).rejects.toThrow(PetstoreFix.NotFoundError);
+    ).rejects.toThrow(Petstore.NotFoundError);
   });
 
   test('inventory', async () => {
-    const responsePromise = petstoreFix.store.inventory();
+    const responsePromise = petstore.store.inventory();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -58,8 +58,8 @@ describe('resource store', () => {
 
   test('inventory: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(petstoreFix.store.inventory({ path: '/_stainless_unknown_path' })).rejects.toThrow(
-      PetstoreFix.NotFoundError,
+    await expect(petstore.store.inventory({ path: '/_stainless_unknown_path' })).rejects.toThrow(
+      Petstore.NotFoundError,
     );
   });
 });

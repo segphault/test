@@ -1,9 +1,9 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import PetstoreFix from 'petstore-fix';
+import Petstore from 'petstore-fix';
 import { Response } from 'node-fetch';
 
-const petstoreFix = new PetstoreFix({
+const petstore = new Petstore({
   apiKey: 'My API Key',
   oauthAccessToken: 'My OAuth Access Token',
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
@@ -11,7 +11,7 @@ const petstoreFix = new PetstoreFix({
 
 describe('resource pets', () => {
   test('create: only required params', async () => {
-    const responsePromise = petstoreFix.pets.create({
+    const responsePromise = petstore.pets.create({
       name: 'doggie',
       photoUrls: ['string', 'string', 'string'],
     });
@@ -25,7 +25,7 @@ describe('resource pets', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await petstoreFix.pets.create({
+    const response = await petstore.pets.create({
       name: 'doggie',
       photoUrls: ['string', 'string', 'string'],
       id: 10,
@@ -40,7 +40,7 @@ describe('resource pets', () => {
   });
 
   test('retrieve', async () => {
-    const responsePromise = petstoreFix.pets.retrieve(0);
+    const responsePromise = petstore.pets.retrieve(0);
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -52,13 +52,13 @@ describe('resource pets', () => {
 
   test('retrieve: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(petstoreFix.pets.retrieve(0, { path: '/_stainless_unknown_path' })).rejects.toThrow(
-      PetstoreFix.NotFoundError,
+    await expect(petstore.pets.retrieve(0, { path: '/_stainless_unknown_path' })).rejects.toThrow(
+      Petstore.NotFoundError,
     );
   });
 
   test('update: only required params', async () => {
-    const responsePromise = petstoreFix.pets.update({
+    const responsePromise = petstore.pets.update({
       name: 'doggie',
       photoUrls: ['string', 'string', 'string'],
     });
@@ -72,7 +72,7 @@ describe('resource pets', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await petstoreFix.pets.update({
+    const response = await petstore.pets.update({
       name: 'doggie',
       photoUrls: ['string', 'string', 'string'],
       id: 10,
@@ -87,7 +87,7 @@ describe('resource pets', () => {
   });
 
   test('delete', async () => {
-    const responsePromise = petstoreFix.pets.delete(0);
+    const responsePromise = petstore.pets.delete(0);
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -99,13 +99,13 @@ describe('resource pets', () => {
 
   test('delete: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(petstoreFix.pets.delete(0, { path: '/_stainless_unknown_path' })).rejects.toThrow(
-      PetstoreFix.NotFoundError,
+    await expect(petstore.pets.delete(0, { path: '/_stainless_unknown_path' })).rejects.toThrow(
+      Petstore.NotFoundError,
     );
   });
 
   test('findByStatus', async () => {
-    const responsePromise = petstoreFix.pets.findByStatus();
+    const responsePromise = petstore.pets.findByStatus();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -117,20 +117,20 @@ describe('resource pets', () => {
 
   test('findByStatus: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(petstoreFix.pets.findByStatus({ path: '/_stainless_unknown_path' })).rejects.toThrow(
-      PetstoreFix.NotFoundError,
+    await expect(petstore.pets.findByStatus({ path: '/_stainless_unknown_path' })).rejects.toThrow(
+      Petstore.NotFoundError,
     );
   });
 
   test('findByStatus: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      petstoreFix.pets.findByStatus({ status: 'available' }, { path: '/_stainless_unknown_path' }),
-    ).rejects.toThrow(PetstoreFix.NotFoundError);
+      petstore.pets.findByStatus({ status: 'available' }, { path: '/_stainless_unknown_path' }),
+    ).rejects.toThrow(Petstore.NotFoundError);
   });
 
   test('findByTags', async () => {
-    const responsePromise = petstoreFix.pets.findByTags();
+    const responsePromise = petstore.pets.findByTags();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -142,23 +142,23 @@ describe('resource pets', () => {
 
   test('findByTags: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(petstoreFix.pets.findByTags({ path: '/_stainless_unknown_path' })).rejects.toThrow(
-      PetstoreFix.NotFoundError,
+    await expect(petstore.pets.findByTags({ path: '/_stainless_unknown_path' })).rejects.toThrow(
+      Petstore.NotFoundError,
     );
   });
 
   test('findByTags: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      petstoreFix.pets.findByTags(
+      petstore.pets.findByTags(
         { tags: ['string', 'string', 'string'] },
         { path: '/_stainless_unknown_path' },
       ),
-    ).rejects.toThrow(PetstoreFix.NotFoundError);
+    ).rejects.toThrow(Petstore.NotFoundError);
   });
 
   test('updateById', async () => {
-    const responsePromise = petstoreFix.pets.updateById(0);
+    const responsePromise = petstore.pets.updateById(0);
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -170,24 +170,20 @@ describe('resource pets', () => {
 
   test('updateById: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(petstoreFix.pets.updateById(0, { path: '/_stainless_unknown_path' })).rejects.toThrow(
-      PetstoreFix.NotFoundError,
+    await expect(petstore.pets.updateById(0, { path: '/_stainless_unknown_path' })).rejects.toThrow(
+      Petstore.NotFoundError,
     );
   });
 
   test('updateById: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      petstoreFix.pets.updateById(
-        0,
-        { name: 'string', status: 'string' },
-        { path: '/_stainless_unknown_path' },
-      ),
-    ).rejects.toThrow(PetstoreFix.NotFoundError);
+      petstore.pets.updateById(0, { name: 'string', status: 'string' }, { path: '/_stainless_unknown_path' }),
+    ).rejects.toThrow(Petstore.NotFoundError);
   });
 
   test('uploadImage', async () => {
-    const responsePromise = petstoreFix.pets.uploadImage(0);
+    const responsePromise = petstore.pets.uploadImage(0);
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -199,15 +195,15 @@ describe('resource pets', () => {
 
   test('uploadImage: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(petstoreFix.pets.uploadImage(0, { path: '/_stainless_unknown_path' })).rejects.toThrow(
-      PetstoreFix.NotFoundError,
+    await expect(petstore.pets.uploadImage(0, { path: '/_stainless_unknown_path' })).rejects.toThrow(
+      Petstore.NotFoundError,
     );
   });
 
   test('uploadImage: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      petstoreFix.pets.uploadImage(0, { additionalMetadata: 'string' }, { path: '/_stainless_unknown_path' }),
-    ).rejects.toThrow(PetstoreFix.NotFoundError);
+      petstore.pets.uploadImage(0, { additionalMetadata: 'string' }, { path: '/_stainless_unknown_path' }),
+    ).rejects.toThrow(Petstore.NotFoundError);
   });
 });
