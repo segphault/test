@@ -26,13 +26,13 @@ The full API of this library can be found in [api.md](api.md).
 import Petstore from 'petstore-fix';
 
 const petstore = new Petstore({
-  apiKey: process.env['PETSTORE_FIX_API_KEY'], // This is the default and can be omitted
+  apiKey: process.env['PETSTORE_API_KEY'], // This is the default and can be omitted
 });
 
 async function main() {
-  const pet = await petstore.pets.create({ name: 'doggie', photoUrls: ['string', 'string', 'string'] });
+  const order = await petstore.store.createOrder({ petId: 1, quantity: 1, status: 'placed' });
 
-  console.log(pet.id);
+  console.log(order.id);
 }
 
 main();
@@ -47,12 +47,11 @@ This library includes TypeScript definitions for all request params and response
 import Petstore from 'petstore-fix';
 
 const petstore = new Petstore({
-  apiKey: process.env['PETSTORE_FIX_API_KEY'], // This is the default and can be omitted
+  apiKey: process.env['PETSTORE_API_KEY'], // This is the default and can be omitted
 });
 
 async function main() {
-  const params: Petstore.PetCreateParams = { name: 'doggie', photoUrls: ['string', 'string', 'string'] };
-  const pet: Petstore.Pet = await petstore.pets.create(params);
+  const storeInventoryResponse: Petstore.StoreInventoryResponse = await petstore.store.inventory();
 }
 
 main();
@@ -69,17 +68,15 @@ a subclass of `APIError` will be thrown:
 <!-- prettier-ignore -->
 ```ts
 async function main() {
-  const pet = await petstore.pets
-    .create({ name: 'doggie', photoUrls: ['string', 'string', 'string'] })
-    .catch(async (err) => {
-      if (err instanceof Petstore.APIError) {
-        console.log(err.status); // 400
-        console.log(err.name); // BadRequestError
-        console.log(err.headers); // {server: 'nginx', ...}
-      } else {
-        throw err;
-      }
-    });
+  const storeInventoryResponse = await petstore.store.inventory().catch(async (err) => {
+    if (err instanceof Petstore.APIError) {
+      console.log(err.status); // 400
+      console.log(err.name); // BadRequestError
+      console.log(err.headers); // {server: 'nginx', ...}
+    } else {
+      throw err;
+    }
+  });
 }
 
 main();
@@ -114,7 +111,7 @@ const petstore = new Petstore({
 });
 
 // Or, configure per-request:
-await petstore.pets.create({ name: 'doggie', photoUrls: ['string', 'string', 'string'] }, {
+await petstore.store.inventory({
   maxRetries: 5,
 });
 ```
@@ -131,7 +128,7 @@ const petstore = new Petstore({
 });
 
 // Override per-request:
-await petstore.pets.create({ name: 'doggie', photoUrls: ['string', 'string', 'string'] }, {
+await petstore.store.inventory({
   timeout: 5 * 1000,
 });
 ```
@@ -152,17 +149,13 @@ You can also use the `.withResponse()` method to get the raw `Response` along wi
 ```ts
 const petstore = new Petstore();
 
-const response = await petstore.pets
-  .create({ name: 'doggie', photoUrls: ['string', 'string', 'string'] })
-  .asResponse();
+const response = await petstore.store.inventory().asResponse();
 console.log(response.headers.get('X-My-Header'));
 console.log(response.statusText); // access the underlying Response object
 
-const { data: pet, response: raw } = await petstore.pets
-  .create({ name: 'doggie', photoUrls: ['string', 'string', 'string'] })
-  .withResponse();
+const { data: storeInventoryResponse, response: raw } = await petstore.store.inventory().withResponse();
 console.log(raw.headers.get('X-My-Header'));
-console.log(pet.id);
+console.log(storeInventoryResponse);
 ```
 
 ### Making custom/undocumented requests
@@ -266,12 +259,9 @@ const petstore = new Petstore({
 });
 
 // Override per-request:
-await petstore.pets.create(
-  { name: 'doggie', photoUrls: ['string', 'string', 'string'] },
-  {
-    httpAgent: new http.Agent({ keepAlive: false }),
-  },
-);
+await petstore.store.inventory({
+  httpAgent: new http.Agent({ keepAlive: false }),
+});
 ```
 
 ## Semantic versioning
