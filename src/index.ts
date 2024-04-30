@@ -9,7 +9,7 @@ import * as API from 'petstore-fix/resources/index';
 
 export interface ClientOptions {
   /**
-   * Defaults to process.env['PETSTORE_FIX_API_KEY'].
+   * Defaults to process.env['PETSTORE_API_KEY'].
    */
   apiKey?: string | undefined;
 
@@ -79,7 +79,7 @@ export class Petstore extends Core.APIClient {
   /**
    * API Client for interfacing with the Petstore API.
    *
-   * @param {string | undefined} [opts.apiKey=process.env['PETSTORE_FIX_API_KEY'] ?? undefined]
+   * @param {string | undefined} [opts.apiKey=process.env['PETSTORE_API_KEY'] ?? undefined]
    * @param {string} [opts.baseURL=process.env['PETSTORE_BASE_URL'] ?? https://petstore3.swagger.io/api/v3] - Override the default base URL for the API.
    * @param {number} [opts.timeout=1 minute] - The maximum amount of time (in milliseconds) the client will wait for a response before timing out.
    * @param {number} [opts.httpAgent] - An HTTP agent used to manage HTTP(s) connections.
@@ -90,12 +90,12 @@ export class Petstore extends Core.APIClient {
    */
   constructor({
     baseURL = Core.readEnv('PETSTORE_BASE_URL'),
-    apiKey = Core.readEnv('PETSTORE_FIX_API_KEY'),
+    apiKey = Core.readEnv('PETSTORE_API_KEY'),
     ...opts
   }: ClientOptions = {}) {
     if (apiKey === undefined) {
       throw new Errors.PetstoreError(
-        "The PETSTORE_FIX_API_KEY environment variable is missing or empty; either provide it, or instantiate the Petstore client with an apiKey option, like new Petstore({ apiKey: 'My API Key' }).",
+        "The PETSTORE_API_KEY environment variable is missing or empty; either provide it, or instantiate the Petstore client with an apiKey option, like new Petstore({ apiKey: 'My API Key' }).",
       );
     }
 
