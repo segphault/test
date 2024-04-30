@@ -22,9 +22,28 @@ export class UserResource extends APIResource {
   }
 
   /**
+   * Get user by user name
+   */
+  retrieve(username: string, options?: Core.RequestOptions): Core.APIPromise<User> {
+    return this._client.get(`/user/${username}`, options);
+  }
+
+  /**
    * This can only be done by the logged in user.
    */
-  deleteUsername(username: string, options?: Core.RequestOptions): Core.APIPromise<void> {
+  update(params: UserUpdateParams, options?: Core.RequestOptions): Core.APIPromise<void> {
+    const { path_username, body_username, ...body } = params;
+    return this._client.put(`/user/${path_username}`, {
+      body: { username: body_username, ...body },
+      ...options,
+      headers: { Accept: '*/*', ...options?.headers },
+    });
+  }
+
+  /**
+   * This can only be done by the logged in user.
+   */
+  delete(username: string, options?: Core.RequestOptions): Core.APIPromise<void> {
     return this._client.delete(`/user/${username}`, {
       ...options,
       headers: { Accept: '*/*', ...options?.headers },
@@ -34,7 +53,7 @@ export class UserResource extends APIResource {
   /**
    * Creates list of users with given input array
    */
-  listWithCreate(body: UserListWithCreateParams, options?: Core.RequestOptions): Core.APIPromise<User> {
+  createWithList(body: UserCreateWithListParams, options?: Core.RequestOptions): Core.APIPromise<User> {
     return this._client.post('/user/createWithList', { body, ...options });
   }
 
@@ -62,25 +81,6 @@ export class UserResource extends APIResource {
    */
   logout(options?: Core.RequestOptions): Core.APIPromise<void> {
     return this._client.get('/user/logout', { ...options, headers: { Accept: '*/*', ...options?.headers } });
-  }
-
-  /**
-   * Get user by user name
-   */
-  retrieveUsername(username: string, options?: Core.RequestOptions): Core.APIPromise<User> {
-    return this._client.get(`/user/${username}`, options);
-  }
-
-  /**
-   * This can only be done by the logged in user.
-   */
-  updateUsername(params: UserUpdateUsernameParams, options?: Core.RequestOptions): Core.APIPromise<void> {
-    const { path_username, body_username, ...body } = params;
-    return this._client.put(`/user/${path_username}`, {
-      body: { username: body_username, ...body },
-      ...options,
-      headers: { Accept: '*/*', ...options?.headers },
-    });
   }
 }
 
@@ -128,21 +128,7 @@ export interface UserCreateParams {
   userStatus?: number;
 }
 
-export type UserListWithCreateParams = Array<User>;
-
-export interface UserLoginParams {
-  /**
-   * The password for login in clear text
-   */
-  password?: string;
-
-  /**
-   * The user name for login
-   */
-  username?: string;
-}
-
-export interface UserUpdateUsernameParams {
+export interface UserUpdateParams {
   /**
    * Path param: name that need to be deleted
    */
@@ -189,11 +175,25 @@ export interface UserUpdateUsernameParams {
   userStatus?: number;
 }
 
+export type UserCreateWithListParams = Array<User>;
+
+export interface UserLoginParams {
+  /**
+   * The password for login in clear text
+   */
+  password?: string;
+
+  /**
+   * The user name for login
+   */
+  username?: string;
+}
+
 export namespace UserResource {
   export import User = UserAPI.User;
   export import UserLoginResponse = UserAPI.UserLoginResponse;
   export import UserCreateParams = UserAPI.UserCreateParams;
-  export import UserListWithCreateParams = UserAPI.UserListWithCreateParams;
+  export import UserUpdateParams = UserAPI.UserUpdateParams;
+  export import UserCreateWithListParams = UserAPI.UserCreateWithListParams;
   export import UserLoginParams = UserAPI.UserLoginParams;
-  export import UserUpdateUsernameParams = UserAPI.UserUpdateUsernameParams;
 }

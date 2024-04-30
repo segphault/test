@@ -1,8 +1,8 @@
-# Petstore Fix Node API Library
+# Petstore Node API Library
 
 [![NPM version](https://img.shields.io/npm/v/petstore-fix.svg)](https://npmjs.org/package/petstore-fix)
 
-This library provides convenient access to the Petstore Fix REST API from server-side TypeScript or JavaScript.
+This library provides convenient access to the Petstore REST API from server-side TypeScript or JavaScript.
 
 The REST API documentation can be found [on docs.petstore-fix.com](https://docs.petstore-fix.com). The full API of this library can be found in [api.md](api.md).
 
@@ -23,12 +23,12 @@ The full API of this library can be found in [api.md](api.md).
 
 <!-- prettier-ignore -->
 ```js
-import PetstoreFix from 'petstore-fix';
+import Petstore from 'petstore-fix';
 
-const petstoreFix = new PetstoreFix();
+const petstore = new Petstore();
 
 async function main() {
-  const pet = await petstoreFix.pets.create({ name: 'doggie', photoUrls: ['string', 'string', 'string'] });
+  const pet = await petstore.pets.create({ name: 'doggie', photoUrls: ['string', 'string', 'string'] });
 
   console.log(pet.id);
 }
@@ -42,13 +42,13 @@ This library includes TypeScript definitions for all request params and response
 
 <!-- prettier-ignore -->
 ```ts
-import PetstoreFix from 'petstore-fix';
+import Petstore from 'petstore-fix';
 
-const petstoreFix = new PetstoreFix();
+const petstore = new Petstore();
 
 async function main() {
-  const params: PetstoreFix.PetCreateParams = { name: 'doggie', photoUrls: ['string', 'string', 'string'] };
-  const pet: PetstoreFix.Pet = await petstoreFix.pets.create(params);
+  const params: Petstore.PetCreateParams = { name: 'doggie', photoUrls: ['string', 'string', 'string'] };
+  const pet: Petstore.Pet = await petstore.pets.create(params);
 }
 
 main();
@@ -65,10 +65,10 @@ a subclass of `APIError` will be thrown:
 <!-- prettier-ignore -->
 ```ts
 async function main() {
-  const pet = await petstoreFix.pets
+  const pet = await petstore.pets
     .create({ name: 'doggie', photoUrls: ['string', 'string', 'string'] })
     .catch(async (err) => {
-      if (err instanceof PetstoreFix.APIError) {
+      if (err instanceof Petstore.APIError) {
         console.log(err.status); // 400
         console.log(err.name); // BadRequestError
         console.log(err.headers); // {server: 'nginx', ...}
@@ -105,13 +105,13 @@ You can use the `maxRetries` option to configure or disable this:
 <!-- prettier-ignore -->
 ```js
 // Configure the default for all requests:
-const petstoreFix = new PetstoreFix({
+const petstore = new Petstore({
   maxRetries: 0, // default is 2
   oauthAccessToken: 'My OAuth Access Token',
 });
 
 // Or, configure per-request:
-await petstoreFix.pets.create({ name: 'doggie', photoUrls: ['string', 'string', 'string'] }, {
+await petstore.pets.create({ name: 'doggie', photoUrls: ['string', 'string', 'string'] }, {
   maxRetries: 5,
 });
 ```
@@ -123,13 +123,13 @@ Requests time out after 1 minute by default. You can configure this with a `time
 <!-- prettier-ignore -->
 ```ts
 // Configure the default for all requests:
-const petstoreFix = new PetstoreFix({
+const petstore = new Petstore({
   timeout: 20 * 1000, // 20 seconds (default is 1 minute)
   oauthAccessToken: 'My OAuth Access Token',
 });
 
 // Override per-request:
-await petstoreFix.pets.create({ name: 'doggie', photoUrls: ['string', 'string', 'string'] }, {
+await petstore.pets.create({ name: 'doggie', photoUrls: ['string', 'string', 'string'] }, {
   timeout: 5 * 1000,
 });
 ```
@@ -148,15 +148,15 @@ You can also use the `.withResponse()` method to get the raw `Response` along wi
 
 <!-- prettier-ignore -->
 ```ts
-const petstoreFix = new PetstoreFix();
+const petstore = new Petstore();
 
-const response = await petstoreFix.pets
+const response = await petstore.pets
   .create({ name: 'doggie', photoUrls: ['string', 'string', 'string'] })
   .asResponse();
 console.log(response.headers.get('X-My-Header'));
 console.log(response.statusText); // access the underlying Response object
 
-const { data: pet, response: raw } = await petstoreFix.pets
+const { data: pet, response: raw } = await petstore.pets
   .create({ name: 'doggie', photoUrls: ['string', 'string', 'string'] })
   .withResponse();
 console.log(raw.headers.get('X-My-Header'));
@@ -213,13 +213,13 @@ By default, this library uses `node-fetch` in Node, and expects a global `fetch`
 
 If you would prefer to use a global, web-standards-compliant `fetch` function even in a Node environment,
 (for example, if you are running Node with `--experimental-fetch` or using NextJS which polyfills with `undici`),
-add the following import before your first import `from "PetstoreFix"`:
+add the following import before your first import `from "Petstore"`:
 
 ```ts
 // Tell TypeScript and the package to use the global web fetch instead of node-fetch.
 // Note, despite the name, this does not add any polyfills, but expects them to be provided if needed.
 import 'petstore-fix/shims/web';
-import PetstoreFix from 'petstore-fix';
+import Petstore from 'petstore-fix';
 ```
 
 To do the inverse, add `import "petstore-fix/shims/node"` (which does import polyfills).
@@ -232,9 +232,9 @@ which can be used to inspect or alter the `Request` or `Response` before/after e
 
 ```ts
 import { fetch } from 'undici'; // as one example
-import PetstoreFix from 'petstore-fix';
+import Petstore from 'petstore-fix';
 
-const client = new PetstoreFix({
+const client = new Petstore({
   fetch: async (url: RequestInfo, init?: RequestInit): Promise<Response> => {
     console.log('About to make a request', url, init);
     const response = await fetch(url, init);
@@ -259,13 +259,13 @@ import http from 'http';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 
 // Configure the default for all requests:
-const petstoreFix = new PetstoreFix({
+const petstore = new Petstore({
   httpAgent: new HttpsProxyAgent(process.env.PROXY_URL),
   oauthAccessToken: 'My OAuth Access Token',
 });
 
 // Override per-request:
-await petstoreFix.pets.create(
+await petstore.pets.create(
   { name: 'doggie', photoUrls: ['string', 'string', 'string'] },
   {
     httpAgent: new http.Agent({ keepAlive: false }),
@@ -292,7 +292,7 @@ TypeScript >= 4.5 is supported.
 The following runtimes are supported:
 
 - Node.js 18 LTS or later ([non-EOL](https://endoflife.date/nodejs)) versions.
-- Deno v1.28.0 or higher, using `import PetstoreFix from "npm:petstore-fix"`.
+- Deno v1.28.0 or higher, using `import Petstore from "npm:petstore-fix"`.
 - Bun 1.0 or later.
 - Cloudflare Workers.
 - Vercel Edge Runtime.

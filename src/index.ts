@@ -21,7 +21,7 @@ export interface ClientOptions {
   /**
    * Override the default base URL for the API, e.g., "https://api.example.com/v2/"
    *
-   * Defaults to process.env['PETSTORE_FIX_BASE_URL'].
+   * Defaults to process.env['PETSTORE_BASE_URL'].
    */
   baseURL?: string | null | undefined;
 
@@ -75,19 +75,19 @@ export interface ClientOptions {
   defaultQuery?: Core.DefaultQuery;
 }
 
-/** API Client for interfacing with the Petstore Fix API. */
-export class PetstoreFix extends Core.APIClient {
+/** API Client for interfacing with the Petstore API. */
+export class Petstore extends Core.APIClient {
   apiKey: string;
   oauthAccessToken: string;
 
   private _options: ClientOptions;
 
   /**
-   * API Client for interfacing with the Petstore Fix API.
+   * API Client for interfacing with the Petstore API.
    *
    * @param {string | undefined} [opts.apiKey=process.env['PETSTORE_FIX_API_KEY'] ?? undefined]
    * @param {string | undefined} [opts.oauthAccessToken=process.env['PETSTORE_FIX_OAUTH_ACCESS_TOKEN'] ?? undefined]
-   * @param {string} [opts.baseURL=process.env['PETSTORE_FIX_BASE_URL'] ?? https://petstore3.swagger.io/api/v3] - Override the default base URL for the API.
+   * @param {string} [opts.baseURL=process.env['PETSTORE_BASE_URL'] ?? https://petstore3.swagger.io/api/v3] - Override the default base URL for the API.
    * @param {number} [opts.timeout=1 minute] - The maximum amount of time (in milliseconds) the client will wait for a response before timing out.
    * @param {number} [opts.httpAgent] - An HTTP agent used to manage HTTP(s) connections.
    * @param {Core.Fetch} [opts.fetch] - Specify a custom `fetch` function implementation.
@@ -96,19 +96,19 @@ export class PetstoreFix extends Core.APIClient {
    * @param {Core.DefaultQuery} opts.defaultQuery - Default query parameters to include with every request to the API.
    */
   constructor({
-    baseURL = Core.readEnv('PETSTORE_FIX_BASE_URL'),
+    baseURL = Core.readEnv('PETSTORE_BASE_URL'),
     apiKey = Core.readEnv('PETSTORE_FIX_API_KEY'),
     oauthAccessToken = Core.readEnv('PETSTORE_FIX_OAUTH_ACCESS_TOKEN'),
     ...opts
   }: ClientOptions = {}) {
     if (apiKey === undefined) {
-      throw new Errors.PetstoreFixError(
-        "The PETSTORE_FIX_API_KEY environment variable is missing or empty; either provide it, or instantiate the PetstoreFix client with an apiKey option, like new PetstoreFix({ apiKey: 'My API Key' }).",
+      throw new Errors.PetstoreError(
+        "The PETSTORE_FIX_API_KEY environment variable is missing or empty; either provide it, or instantiate the Petstore client with an apiKey option, like new Petstore({ apiKey: 'My API Key' }).",
       );
     }
     if (oauthAccessToken === undefined) {
-      throw new Errors.PetstoreFixError(
-        "The PETSTORE_FIX_OAUTH_ACCESS_TOKEN environment variable is missing or empty; either provide it, or instantiate the PetstoreFix client with an oauthAccessToken option, like new PetstoreFix({ oauthAccessToken: 'My OAuth Access Token' }).",
+      throw new Errors.PetstoreError(
+        "The PETSTORE_FIX_OAUTH_ACCESS_TOKEN environment variable is missing or empty; either provide it, or instantiate the Petstore client with an oauthAccessToken option, like new Petstore({ oauthAccessToken: 'My OAuth Access Token' }).",
       );
     }
 
@@ -155,9 +155,9 @@ export class PetstoreFix extends Core.APIClient {
     return qs.stringify(query, { arrayFormat: 'comma' });
   }
 
-  static PetstoreFix = this;
+  static Petstore = this;
 
-  static PetstoreFixError = Errors.PetstoreFixError;
+  static PetstoreError = Errors.PetstoreError;
   static APIError = Errors.APIError;
   static APIConnectionError = Errors.APIConnectionError;
   static APIConnectionTimeoutError = Errors.APIConnectionTimeoutError;
@@ -176,7 +176,7 @@ export class PetstoreFix extends Core.APIClient {
 }
 
 export const {
-  PetstoreFixError,
+  PetstoreError,
   APIError,
   APIConnectionError,
   APIConnectionTimeoutError,
@@ -194,7 +194,7 @@ export const {
 export import toFile = Uploads.toFile;
 export import fileFromPath = Uploads.fileFromPath;
 
-export namespace PetstoreFix {
+export namespace Petstore {
   export import RequestOptions = Core.RequestOptions;
 
   export import Pets = API.Pets;
@@ -217,11 +217,11 @@ export namespace PetstoreFix {
   export import User = API.User;
   export import UserLoginResponse = API.UserLoginResponse;
   export import UserCreateParams = API.UserCreateParams;
-  export import UserListWithCreateParams = API.UserListWithCreateParams;
+  export import UserUpdateParams = API.UserUpdateParams;
+  export import UserCreateWithListParams = API.UserCreateWithListParams;
   export import UserLoginParams = API.UserLoginParams;
-  export import UserUpdateUsernameParams = API.UserUpdateUsernameParams;
 
   export import Order = API.Order;
 }
 
-export default PetstoreFix;
+export default Petstore;

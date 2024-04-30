@@ -19,8 +19,8 @@ export {
   User,
   UserLoginResponse,
   UserCreateParams,
-  UserListWithCreateParams,
+  UserUpdateParams,
+  UserCreateWithListParams,
   UserLoginParams,
-  UserUpdateUsernameParams,
   UserResource,
 } from './user';
