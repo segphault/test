@@ -59,9 +59,8 @@
       "hidden": true
     }
   ],
-  "release-type": "go",
+  "release-type": "python",
   "extra-files": [
-    "internal/version.go",
-    "README.md"
+    "src/petstore/_version.py"
   ]
 }
