@@ -1,23 +1,9 @@
-# syntax=docker/dockerfile:1
-FROM debian:bookworm-slim
+ARG VARIANT="3.9"
+FROM mcr.microsoft.com/vscode/devcontainers/python:0-${VARIANT}
 
-RUN apt-get update && apt-get install -y \
-  libxkbcommon0 \
-  ca-certificates \
-  git \
-  golang \
-  unzip \
-  libc++1 \
-  vim \
-  && apt-get clean autoclean
+USER vscode
 
-# Ensure UTF-8 encoding
-ENV LANG=C.UTF-8
-ENV LC_ALL=C.UTF-8
+RUN curl -sSf https://rye-up.com/get | RYE_VERSION="0.24.0" RYE_INSTALL_OPTION="--yes" bash
+ENV PATH=/home/vscode/.rye/shims:$PATH
 
-ENV GOPATH=/go
-ENV PATH=$GOPATH/bin:$PATH
-
-WORKDIR /workspace
-
-COPY . /workspace
+RUN echo "[[ -d .venv ]] && source .venv/bin/activate" >> /home/vscode/.bashrc

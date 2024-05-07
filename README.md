@@ -1,338 +1,306 @@
-# Petstore Go API Library
+# Petstore Python API library
 
-<a href="https://pkg.go.dev/github.com/segphault/test"><img src="https://pkg.go.dev/badge/github.com/segphault/test.svg" alt="Go Reference"></a>
+[![PyPI version](https://img.shields.io/pypi/v/petstore-fix.svg)](https://pypi.org/project/petstore-fix/)
 
-The Petstore Go library provides convenient access to [the Petstore REST
-API](https://app.stainlessapi.com/docs) from applications written in Go. The full API of this library can be found in [api.md](api.md).
+The Petstore Python library provides convenient access to the Petstore REST API from any Python 3.7+
+application. The library includes type definitions for all request params and response fields,
+and offers both synchronous and asynchronous clients powered by [httpx](https://github.com/encode/httpx).
 
 It is generated with [Stainless](https://www.stainlessapi.com/).
 
+## Documentation
+
+The REST API documentation can be found [on app.stainlessapi.com](https://app.stainlessapi.com/docs). The full API of this library can be found in [api.md](api.md).
+
 ## Installation
 
-<!-- x-release-please-start-version -->
-
-```go
-import (
-	"github.com/segphault/test" // imported as petstorefix
-)
-```
-
-<!-- x-release-please-end -->
-
-Or to pin the version:
-
-<!-- x-release-please-start-version -->
-
 ```sh
-go get -u 'github.com/segphault/test@v0.0.1-alpha.0'
+# install from the production repo
+pip install git+ssh://git@github.com/segphault/test.git
 ```
 
-<!-- x-release-please-end -->
-
-## Requirements
-
-This library requires Go 1.18+.
+> [!NOTE]
+> Once this package is [published to PyPI](https://app.stainlessapi.com/docs/guides/publish), this will become: `pip install --pre petstore-fix`
 
 ## Usage
 
 The full API of this library can be found in [api.md](api.md).
 
-```go
-package main
+```python
+import os
+from petstore import Petstore
 
-import (
-	"context"
-	"fmt"
-
-	"github.com/segphault/test"
-	"github.com/segphault/test/option"
-	"github.com/segphault/test/shared"
+client = Petstore(
+    # This is the default and can be omitted
+    api_key=os.environ.get("PETSTORE_API_KEY"),
 )
 
-func main() {
-	client := petstorefix.NewClient(
-		option.WithAPIKey("My API Key"), // defaults to os.LookupEnv("PETSTORE_API_KEY")
-	)
-	order, err := client.Store.NewOrder(context.TODO(), petstorefix.StoreNewOrderParams{
-		Order: shared.OrderParam{},
-	})
-	if err != nil {
-		panic(err.Error())
-	}
-	fmt.Printf("%+v\n", order.ID)
-}
-
+order = client.store.create_order(
+    pet_id=1,
+    quantity=1,
+    status="placed",
+)
+print(order.id)
 ```
 
-### Request fields
+While you can provide an `api_key` keyword argument,
+we recommend using [python-dotenv](https://pypi.org/project/python-dotenv/)
+to add `PETSTORE_API_KEY="My API Key"` to your `.env` file
+so that your API Key is not stored in source control.
 
-All request parameters are wrapped in a generic `Field` type,
-which we use to distinguish zero values from null or omitted fields.
+## Async usage
 
-This prevents accidentally sending a zero value if you forget a required parameter,
-and enables explicitly sending `null`, `false`, `''`, or `0` on optional parameters.
-Any field not specified is not sent.
+Simply import `AsyncPetstore` instead of `Petstore` and use `await` with each API call:
 
-To construct fields with values, use the helpers `String()`, `Int()`, `Float()`, or most commonly, the generic `F[T]()`.
-To send a null, use `Null[T]()`, and to send a nonconforming value, use `Raw[T](any)`. For example:
+```python
+import os
+import asyncio
+from petstore import AsyncPetstore
 
-```go
-params := FooParams{
-	Name: petstorefix.F("hello"),
-
-	// Explicitly send `"description": null`
-	Description: petstorefix.Null[string](),
-
-	Point: petstorefix.F(petstorefix.Point{
-		X: petstorefix.Int(0),
-		Y: petstorefix.Int(1),
-
-		// In cases where the API specifies a given type,
-		// but you want to send something else, use `Raw`:
-		Z: petstorefix.Raw[int64](0.01), // sends a float
-	}),
-}
-```
-
-### Response objects
-
-All fields in response structs are value types (not pointers or wrappers).
-
-If a given field is `null`, not present, or invalid, the corresponding field
-will simply be its zero value.
-
-All response structs also include a special `JSON` field, containing more detailed
-information about each property, which you can use like so:
-
-```go
-if res.Name == "" {
-	// true if `"name"` is either not present or explicitly null
-	res.JSON.Name.IsNull()
-
-	// true if the `"name"` key was not present in the repsonse JSON at all
-	res.JSON.Name.IsMissing()
-
-	// When the API returns data that cannot be coerced to the expected type:
-	if res.JSON.Name.IsInvalid() {
-		raw := res.JSON.Name.Raw()
-
-		legacyName := struct{
-			First string `json:"first"`
-			Last  string `json:"last"`
-		}{}
-		json.Unmarshal([]byte(raw), &legacyName)
-		name = legacyName.First + " " + legacyName.Last
-	}
-}
-```
-
-These `.JSON` structs also include an `Extras` map containing
-any properties in the json response that were not specified
-in the struct. This can be useful for API features not yet
-present in the SDK.
-
-```go
-body := res.JSON.ExtraFields["my_unexpected_field"].Raw()
-```
-
-### RequestOptions
-
-This library uses the functional options pattern. Functions defined in the
-`option` package return a `RequestOption`, which is a closure that mutates a
-`RequestConfig`. These options can be supplied to the client or at individual
-requests. For example:
-
-```go
-client := petstorefix.NewClient(
-	// Adds a header to every request made by the client
-	option.WithHeader("X-Some-Header", "custom_header_info"),
+client = AsyncPetstore(
+    # This is the default and can be omitted
+    api_key=os.environ.get("PETSTORE_API_KEY"),
 )
 
-client.Store.Inventory(context.TODO(), ...,
-	// Override the header
-	option.WithHeader("X-Some-Header", "some_other_custom_header_info"),
-	// Add an undocumented field to the request body, using sjson syntax
-	option.WithJSONSet("some.json.path", map[string]string{"my": "object"}),
-)
+async def main() -> None:
+  order = await client.store.create_order(
+      pet_id=1,
+      quantity=1,
+      status="placed",
+  )
+  print(order.id)
+
+asyncio.run(main())
 ```
 
-See the [full list of request options](https://pkg.go.dev/github.com/segphault/test/option).
+Functionality between the synchronous and asynchronous clients is otherwise identical.
 
-### Pagination
+## Using types
 
-This library provides some conveniences for working with paginated list endpoints.
+Nested request parameters are [TypedDicts](https://docs.python.org/3/library/typing.html#typing.TypedDict). Responses are [Pydantic models](https://docs.pydantic.dev) which also provide helper methods for things like:
 
-You can use `.ListAutoPaging()` methods to iterate through items across all pages:
+- Serializing back into JSON, `model.to_json()`
+- Converting to a dictionary, `model.to_dict()`
 
-Or you can use simple `.List()` methods to fetch a single page and receive a standard response object
-with additional helper methods like `.GetNextPage()`, e.g.:
+Typed requests and responses provide autocomplete and documentation within your editor. If you would like to see type errors in VS Code to help catch bugs earlier, set `python.analysis.typeCheckingMode` to `basic`.
 
-### Errors
+## Handling errors
 
-When the API returns a non-success status code, we return an error with type
-`*petstorefix.Error`. This contains the `StatusCode`, `*http.Request`, and
-`*http.Response` values of the request, as well as the JSON of the error body
-(much like other response objects in the SDK).
+When the library is unable to connect to the API (for example, due to network connection problems or a timeout), a subclass of `petstore.APIConnectionError` is raised.
 
-To handle errors, we recommend that you use the `errors.As` pattern:
+When the API returns a non-success status code (that is, 4xx or 5xx
+response), a subclass of `petstore.APIStatusError` is raised, containing `status_code` and `response` properties.
 
-```go
-_, err := client.Store.Inventory(context.TODO())
-if err != nil {
-	var apierr *petstorefix.Error
-	if errors.As(err, &apierr) {
-		println(string(apierr.DumpRequest(true)))  // Prints the serialized HTTP request
-		println(string(apierr.DumpResponse(true))) // Prints the serialized HTTP response
-	}
-	panic(err.Error()) // GET "/store/inventory": 400 Bad Request { ... }
-}
+All errors inherit from `petstore.APIError`.
+
+```python
+import petstore
+from petstore import Petstore
+
+client = Petstore()
+
+try:
+    client.store.inventory()
+except petstore.APIConnectionError as e:
+    print("The server could not be reached")
+    print(e.__cause__) # an underlying Exception, likely raised within httpx.
+except petstore.RateLimitError as e:
+    print("A 429 status code was received; we should back off a bit.")
+except petstore.APIStatusError as e:
+    print("Another non-200-range status code was received")
+    print(e.status_code)
+    print(e.response)
 ```
 
-When other errors occur, they are returned unwrapped; for example,
-if HTTP transport fails, you might receive `*url.Error` wrapping `*net.OpError`.
+Error codes are as followed:
 
-### Timeouts
-
-Requests do not time out by default; use context to configure a timeout for a request lifecycle.
-
-Note that if a request is [retried](#retries), the context timeout does not start over.
-To set a per-retry timeout, use `option.WithRequestTimeout()`.
-
-```go
-// This sets the timeout for the request, including all the retries.
-ctx, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
-defer cancel()
-client.Store.Inventory(
-	ctx,
-	// This sets the per-retry timeout
-	option.WithRequestTimeout(20*time.Second),
-)
-```
-
-### File uploads
-
-Request parameters that correspond to file uploads in multipart requests are typed as
-`param.Field[io.Reader]`. The contents of the `io.Reader` will by default be sent as a multipart form
-part with the file name of "anonymous_file" and content-type of "application/octet-stream".
-
-The file name and content-type can be customized by implementing `Name() string` or `ContentType()
-string` on the run-time type of `io.Reader`. Note that `os.File` implements `Name() string`, so a
-file returned by `os.Open` will be sent with the file name on disk.
-
-We also provide a helper `petstorefix.FileParam(reader io.Reader, filename string, contentType string)`
-which can be used to wrap any `io.Reader` with the appropriate file name and content type.
+| Status Code | Error Type                 |
+| ----------- | -------------------------- |
+| 400         | `BadRequestError`          |
+| 401         | `AuthenticationError`      |
+| 403         | `PermissionDeniedError`    |
+| 404         | `NotFoundError`            |
+| 422         | `UnprocessableEntityError` |
+| 429         | `RateLimitError`           |
+| >=500       | `InternalServerError`      |
+| N/A         | `APIConnectionError`       |
 
 ### Retries
 
-Certain errors will be automatically retried 2 times by default, with a short exponential backoff.
-We retry by default all connection errors, 408 Request Timeout, 409 Conflict, 429 Rate Limit,
-and >=500 Internal errors.
+Certain errors are automatically retried 2 times by default, with a short exponential backoff.
+Connection errors (for example, due to a network connectivity problem), 408 Request Timeout, 409 Conflict,
+429 Rate Limit, and >=500 Internal errors are all retried by default.
 
-You can use the `WithMaxRetries` option to configure or disable this:
+You can use the `max_retries` option to configure or disable retry settings:
 
-```go
-// Configure the default for all requests:
-client := petstorefix.NewClient(
-	option.WithMaxRetries(0), // default is 2
+```python
+from petstore import Petstore
+
+# Configure the default for all requests:
+client = Petstore(
+    # default is 2
+    max_retries=0,
 )
 
-// Override per-request:
-client.Store.Inventory(context.TODO(), option.WithMaxRetries(5))
+# Or, configure per-request:
+client.with_options(max_retries = 5).store.inventory()
 ```
+
+### Timeouts
+
+By default requests time out after 1 minute. You can configure this with a `timeout` option,
+which accepts a float or an [`httpx.Timeout`](https://www.python-httpx.org/advanced/#fine-tuning-the-configuration) object:
+
+```python
+from petstore import Petstore
+
+# Configure the default for all requests:
+client = Petstore(
+    # 20 seconds (default is 1 minute)
+    timeout=20.0,
+)
+
+# More granular control:
+client = Petstore(
+    timeout=httpx.Timeout(60.0, read=5.0, write=10.0, connect=2.0),
+)
+
+# Override per-request:
+client.with_options(timeout = 5.0).store.inventory()
+```
+
+On timeout, an `APITimeoutError` is thrown.
+
+Note that requests that time out are [retried twice by default](#retries).
+
+## Advanced
+
+### Logging
+
+We use the standard library [`logging`](https://docs.python.org/3/library/logging.html) module.
+
+You can enable logging by setting the environment variable `PETSTORE_LOG` to `debug`.
+
+```shell
+$ export PETSTORE_LOG=debug
+```
+
+### How to tell whether `None` means `null` or missing
+
+In an API response, a field may be explicitly `null`, or missing entirely; in either case, its value is `None` in this library. You can differentiate the two cases with `.model_fields_set`:
+
+```py
+if response.my_field is None:
+  if 'my_field' not in response.model_fields_set:
+    print('Got json like {}, without a "my_field" key present at all.')
+  else:
+    print('Got json like {"my_field": null}.')
+```
+
+### Accessing raw response data (e.g. headers)
+
+The "raw" Response object can be accessed by prefixing `.with_raw_response.` to any HTTP method call, e.g.,
+
+```py
+from petstore import Petstore
+
+client = Petstore()
+response = client.store.with_raw_response.inventory()
+print(response.headers.get('X-My-Header'))
+
+store = response.parse()  # get the object that `store.inventory()` would have returned
+print(store)
+```
+
+These methods return an [`APIResponse`](https://github.com/segphault/test/tree/main/src/petstore/_response.py) object.
+
+The async client returns an [`AsyncAPIResponse`](https://github.com/segphault/test/tree/main/src/petstore/_response.py) with the same structure, the only difference being `await`able methods for reading the response content.
+
+#### `.with_streaming_response`
+
+The above interface eagerly reads the full response body when you make the request, which may not always be what you want.
+
+To stream the response body, use `.with_streaming_response` instead, which requires a context manager and only reads the response body once you call `.read()`, `.text()`, `.json()`, `.iter_bytes()`, `.iter_text()`, `.iter_lines()` or `.parse()`. In the async client, these are async methods.
+
+```python
+with client.store.with_streaming_response.inventory() as response :
+    print(response.headers.get('X-My-Header'))
+
+    for line in response.iter_lines():
+      print(line)
+```
+
+The context manager is required so that the response will reliably be closed.
 
 ### Making custom/undocumented requests
 
-This library is typed for convenient access to the documented API. If you need to access undocumented
-endpoints, params, or response properties, the library can still be used.
+This library is typed for convenient access to the documented API.
+
+If you need to access undocumented endpoints, params, or response properties, the library can still be used.
 
 #### Undocumented endpoints
 
-To make requests to undocumented endpoints, you can use `client.Get`, `client.Post`, and other HTTP verbs.
-`RequestOptions` on the client, such as retries, will be respected when making these requests.
+To make requests to undocumented endpoints, you can make requests using `client.get`, `client.post`, and other
+http verbs. Options on the client will be respected (such as retries) will be respected when making this
+request.
 
-```go
-var (
-    // params can be an io.Reader, a []byte, an encoding/json serializable object,
-    // or a "…Params" struct defined in this library.
-    params map[string]interface{}
+```py
+import httpx
 
-    // result can be an []byte, *http.Response, a encoding/json deserializable object,
-    // or a model defined in this library.
-    result *http.Response
+response = client.post(
+    "/foo",
+    cast_to=httpx.Response,
+    body={"my_param": True},
 )
-err := client.Post(context.Background(), "/unspecified", params, &result)
-if err != nil {
-    …
-}
+
+print(response.headers.get("x-foo"))
 ```
 
 #### Undocumented request params
 
-To make requests using undocumented parameters, you may use either the `option.WithQuerySet()`
-or the `option.WithJSONSet()` methods.
-
-```go
-params := FooNewParams{
-    ID:   petstorefix.F("id_xxxx"),
-    Data: petstorefix.F(FooNewParamsData{
-        FirstName: petstorefix.F("John"),
-    }),
-}
-client.Foo.New(context.Background(), params, option.WithJSONSet("data.last_name", "Doe"))
-```
+If you want to explicitly send an extra param, you can do so with the `extra_query`, `extra_body`, and `extra_headers` request
+options.
 
 #### Undocumented response properties
 
-To access undocumented response properties, you may either access the raw JSON of the response as a string
-with `result.JSON.RawJSON()`, or get the raw JSON of a particular field on the result with
-`result.JSON.Foo.Raw()`.
+To access undocumented response properties, you can access the extra fields like `response.unknown_prop`. You
+can also get all the extra fields on the Pydantic model as a dict with
+[`response.model_extra`](https://docs.pydantic.dev/latest/api/base_model/#pydantic.BaseModel.model_extra).
 
-Any fields that are not present on the response struct will be saved and can be accessed by `result.JSON.ExtraFields()` which returns the extra fields as a `map[string]Field`.
+### Configuring the HTTP client
 
-### Middleware
+You can directly override the [httpx client](https://www.python-httpx.org/api/#client) to customize it for your use case, including:
 
-We provide `option.WithMiddleware` which applies the given
-middleware to requests.
+- Support for proxies
+- Custom transports
+- Additional [advanced](https://www.python-httpx.org/advanced/#client-instances) functionality
 
-```go
-func Logger(req *http.Request, next option.MiddlewareNext) (res *http.Response, err error) {
-	// Before the request
-	start := time.Now()
-	LogReq(req)
+```python
+from petstore import Petstore, DefaultHttpxClient
 
-	// Forward the request to the next handler
-	res, err = next(req)
-
-	// Handle stuff after the request
-	end := time.Now()
-	LogRes(res, err, start - end)
-
-    return res, err
-}
-
-client := petstorefix.NewClient(
-	option.WithMiddleware(Logger),
+client = Petstore(
+    # Or use the `PETSTORE_BASE_URL` env var
+    base_url="http://my.test.server.example.com:8083",
+    http_client=DefaultHttpxClient(proxies="http://my.test.proxy.example.com", transport=httpx.HTTPTransport(local_address="0.0.0.0")),
 )
 ```
 
-When multiple middlewares are provided as variadic arguments, the middlewares
-are applied left to right. If `option.WithMiddleware` is given
-multiple times, for example first in the client then the method, the
-middleware in the client will run first and the middleware given in the method
-will run next.
+### Managing HTTP resources
 
-You may also replace the default `http.Client` with
-`option.WithHTTPClient(client)`. Only one http client is
-accepted (this overwrites any previous client) and receives requests after any
-middleware has been applied.
+By default the library closes underlying HTTP connections whenever the client is [garbage collected](https://docs.python.org/3/reference/datamodel.html#object.__del__). You can manually close the client using the `.close()` method if desired, or with a context manager that closes when exiting.
 
-## Semantic versioning
+## Versioning
 
 This package generally follows [SemVer](https://semver.org/spec/v2.0.0.html) conventions, though certain backwards-incompatible changes may be released as minor versions:
 
-1. Changes to library internals which are technically public but not intended or documented for external use. _(Please open a GitHub issue to let us know if you are relying on such internals)_.
-2. Changes that we do not expect to impact the vast majority of users in practice.
+1. Changes that only affect static types, without breaking runtime behavior.
+2. Changes to library internals which are technically public but not intended or documented for external use. _(Please open a GitHub issue to let us know if you are relying on such internals)_.
+3. Changes that we do not expect to impact the vast majority of users in practice.
 
 We take backwards-compatibility seriously and work hard to ensure you can rely on a smooth upgrade experience.
 
 We are keen for your feedback; please open an [issue](https://www.github.com/segphault/test/issues) with questions, bugs, or suggestions.
+
+## Requirements
+
+Python 3.7 or higher.
