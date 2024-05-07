@@ -1,62 +1,67 @@
-# Shared Types
+# Shared Params Types
 
-```python
-from petstore.types import Order
-```
+- <a href="https://pkg.go.dev/github.com/segphault/test/shared">shared</a>.<a href="https://pkg.go.dev/github.com/segphault/test/shared#OrderParam">OrderParam</a>
+
+# Shared Response Types
+
+- <a href="https://pkg.go.dev/github.com/segphault/test/shared">shared</a>.<a href="https://pkg.go.dev/github.com/segphault/test/shared#Order">Order</a>
 
 # Pets
 
-Types:
+Params Types:
 
-```python
-from petstore.types import APIResponse, Pet, PetFindByStatusResponse, PetFindByTagsResponse
-```
+- <a href="https://pkg.go.dev/github.com/segphault/test">petstorefix</a>.<a href="https://pkg.go.dev/github.com/segphault/test#PetParam">PetParam</a>
+
+Response Types:
+
+- <a href="https://pkg.go.dev/github.com/segphault/test">petstorefix</a>.<a href="https://pkg.go.dev/github.com/segphault/test#APIResponse">APIResponse</a>
+- <a href="https://pkg.go.dev/github.com/segphault/test">petstorefix</a>.<a href="https://pkg.go.dev/github.com/segphault/test#Pet">Pet</a>
 
 Methods:
 
-- <code title="post /pet">client.pets.<a href="./src/petstore/resources/pets.py">create</a>(\*\*<a href="src/petstore/types/pet_create_params.py">params</a>) -> <a href="./src/petstore/types/pet.py">Pet</a></code>
-- <code title="get /pet/{petId}">client.pets.<a href="./src/petstore/resources/pets.py">retrieve</a>(pet_id) -> <a href="./src/petstore/types/pet.py">Pet</a></code>
-- <code title="put /pet">client.pets.<a href="./src/petstore/resources/pets.py">update</a>(\*\*<a href="src/petstore/types/pet_update_params.py">params</a>) -> <a href="./src/petstore/types/pet.py">Pet</a></code>
-- <code title="delete /pet/{petId}">client.pets.<a href="./src/petstore/resources/pets.py">delete</a>(pet_id) -> None</code>
-- <code title="get /pet/findByStatus">client.pets.<a href="./src/petstore/resources/pets.py">find_by_status</a>(\*\*<a href="src/petstore/types/pet_find_by_status_params.py">params</a>) -> <a href="./src/petstore/types/pet_find_by_status_response.py">PetFindByStatusResponse</a></code>
-- <code title="get /pet/findByTags">client.pets.<a href="./src/petstore/resources/pets.py">find_by_tags</a>(\*\*<a href="src/petstore/types/pet_find_by_tags_params.py">params</a>) -> <a href="./src/petstore/types/pet_find_by_tags_response.py">PetFindByTagsResponse</a></code>
-- <code title="post /pet/{petId}">client.pets.<a href="./src/petstore/resources/pets.py">update_by_id</a>(pet_id, \*\*<a href="src/petstore/types/pet_update_by_id_params.py">params</a>) -> None</code>
-- <code title="post /pet/{petId}/uploadImage">client.pets.<a href="./src/petstore/resources/pets.py">upload_image</a>(pet_id, \*\*<a href="src/petstore/types/pet_upload_image_params.py">params</a>) -> <a href="./src/petstore/types/api_response.py">APIResponse</a></code>
+- <code title="post /pet">client.Pets.<a href="https://pkg.go.dev/github.com/segphault/test#PetService.New">New</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, body <a href="https://pkg.go.dev/github.com/segphault/test">petstorefix</a>.<a href="https://pkg.go.dev/github.com/segphault/test#PetNewParams">PetNewParams</a>) (<a href="https://pkg.go.dev/github.com/segphault/test">petstorefix</a>.<a href="https://pkg.go.dev/github.com/segphault/test#Pet">Pet</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
+- <code title="get /pet/{petId}">client.Pets.<a href="https://pkg.go.dev/github.com/segphault/test#PetService.Get">Get</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, petID <a href="https://pkg.go.dev/builtin#int64">int64</a>) (<a href="https://pkg.go.dev/github.com/segphault/test">petstorefix</a>.<a href="https://pkg.go.dev/github.com/segphault/test#Pet">Pet</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
+- <code title="put /pet">client.Pets.<a href="https://pkg.go.dev/github.com/segphault/test#PetService.Update">Update</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, body <a href="https://pkg.go.dev/github.com/segphault/test">petstorefix</a>.<a href="https://pkg.go.dev/github.com/segphault/test#PetUpdateParams">PetUpdateParams</a>) (<a href="https://pkg.go.dev/github.com/segphault/test">petstorefix</a>.<a href="https://pkg.go.dev/github.com/segphault/test#Pet">Pet</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
+- <code title="delete /pet/{petId}">client.Pets.<a href="https://pkg.go.dev/github.com/segphault/test#PetService.Delete">Delete</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, petID <a href="https://pkg.go.dev/builtin#int64">int64</a>) <a href="https://pkg.go.dev/builtin#error">error</a></code>
+- <code title="get /pet/findByStatus">client.Pets.<a href="https://pkg.go.dev/github.com/segphault/test#PetService.FindByStatus">FindByStatus</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, query <a href="https://pkg.go.dev/github.com/segphault/test">petstorefix</a>.<a href="https://pkg.go.dev/github.com/segphault/test#PetFindByStatusParams">PetFindByStatusParams</a>) ([]<a href="https://pkg.go.dev/github.com/segphault/test">petstorefix</a>.<a href="https://pkg.go.dev/github.com/segphault/test#Pet">Pet</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
+- <code title="get /pet/findByTags">client.Pets.<a href="https://pkg.go.dev/github.com/segphault/test#PetService.FindByTags">FindByTags</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, query <a href="https://pkg.go.dev/github.com/segphault/test">petstorefix</a>.<a href="https://pkg.go.dev/github.com/segphault/test#PetFindByTagsParams">PetFindByTagsParams</a>) ([]<a href="https://pkg.go.dev/github.com/segphault/test">petstorefix</a>.<a href="https://pkg.go.dev/github.com/segphault/test#Pet">Pet</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
+- <code title="post /pet/{petId}">client.Pets.<a href="https://pkg.go.dev/github.com/segphault/test#PetService.UpdateByID">UpdateByID</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, petID <a href="https://pkg.go.dev/builtin#int64">int64</a>, body <a href="https://pkg.go.dev/github.com/segphault/test">petstorefix</a>.<a href="https://pkg.go.dev/github.com/segphault/test#PetUpdateByIDParams">PetUpdateByIDParams</a>) <a href="https://pkg.go.dev/builtin#error">error</a></code>
+- <code title="post /pet/{petId}/uploadImage">client.Pets.<a href="https://pkg.go.dev/github.com/segphault/test#PetService.UploadImage">UploadImage</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, petID <a href="https://pkg.go.dev/builtin#int64">int64</a>, body <a href="https://pkg.go.dev/github.com/segphault/test">petstorefix</a>.<a href="https://pkg.go.dev/github.com/segphault/test#PetUploadImageParams">PetUploadImageParams</a>) (<a href="https://pkg.go.dev/github.com/segphault/test">petstorefix</a>.<a href="https://pkg.go.dev/github.com/segphault/test#APIResponse">APIResponse</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
 
 # Store
 
-Types:
+Response Types:
 
-```python
-from petstore.types import StoreInventoryResponse
-```
+- <a href="https://pkg.go.dev/github.com/segphault/test">petstorefix</a>.<a href="https://pkg.go.dev/github.com/segphault/test#StoreInventoryResponse">StoreInventoryResponse</a>
 
 Methods:
 
-- <code title="post /store/order">client.store.<a href="./src/petstore/resources/store/store.py">create_order</a>(\*\*<a href="src/petstore/types/store_create_order_params.py">params</a>) -> <a href="./src/petstore/types/shared/order.py">Order</a></code>
-- <code title="get /store/inventory">client.store.<a href="./src/petstore/resources/store/store.py">inventory</a>() -> <a href="./src/petstore/types/store_inventory_response.py">StoreInventoryResponse</a></code>
+- <code title="post /store/order">client.Store.<a href="https://pkg.go.dev/github.com/segphault/test#StoreService.NewOrder">NewOrder</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, body <a href="https://pkg.go.dev/github.com/segphault/test">petstorefix</a>.<a href="https://pkg.go.dev/github.com/segphault/test#StoreNewOrderParams">StoreNewOrderParams</a>) (<a href="https://pkg.go.dev/github.com/segphault/test/shared">shared</a>.<a href="https://pkg.go.dev/github.com/segphault/test/shared#Order">Order</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
+- <code title="get /store/inventory">client.Store.<a href="https://pkg.go.dev/github.com/segphault/test#StoreService.Inventory">Inventory</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>) (<a href="https://pkg.go.dev/github.com/segphault/test">petstorefix</a>.<a href="https://pkg.go.dev/github.com/segphault/test#StoreInventoryResponse">StoreInventoryResponse</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
 
 ## Order
 
 Methods:
 
-- <code title="get /store/order/{orderId}">client.store.order.<a href="./src/petstore/resources/store/order.py">retrieve</a>(order_id) -> <a href="./src/petstore/types/shared/order.py">Order</a></code>
-- <code title="delete /store/order/{orderId}">client.store.order.<a href="./src/petstore/resources/store/order.py">delete_order</a>(order_id) -> None</code>
+- <code title="get /store/order/{orderId}">client.Store.Order.<a href="https://pkg.go.dev/github.com/segphault/test#StoreOrderService.Get">Get</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, orderID <a href="https://pkg.go.dev/builtin#int64">int64</a>) (<a href="https://pkg.go.dev/github.com/segphault/test/shared">shared</a>.<a href="https://pkg.go.dev/github.com/segphault/test/shared#Order">Order</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
+- <code title="delete /store/order/{orderId}">client.Store.Order.<a href="https://pkg.go.dev/github.com/segphault/test#StoreOrderService.DeleteOrder">DeleteOrder</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, orderID <a href="https://pkg.go.dev/builtin#int64">int64</a>) <a href="https://pkg.go.dev/builtin#error">error</a></code>
 
 # User
 
-Types:
+Params Types:
 
-```python
-from petstore.types import User, UserLoginResponse
-```
+- <a href="https://pkg.go.dev/github.com/segphault/test">petstorefix</a>.<a href="https://pkg.go.dev/github.com/segphault/test#UserParam">UserParam</a>
+
+Response Types:
+
+- <a href="https://pkg.go.dev/github.com/segphault/test">petstorefix</a>.<a href="https://pkg.go.dev/github.com/segphault/test#User">User</a>
 
 Methods:
 
-- <code title="post /user">client.user.<a href="./src/petstore/resources/user.py">create</a>(\*\*<a href="src/petstore/types/user_create_params.py">params</a>) -> None</code>
-- <code title="get /user/{username}">client.user.<a href="./src/petstore/resources/user.py">retrieve</a>(username) -> <a href="./src/petstore/types/user.py">User</a></code>
-- <code title="put /user/{username}">client.user.<a href="./src/petstore/resources/user.py">update</a>(existing_username, \*\*<a href="src/petstore/types/user_update_params.py">params</a>) -> None</code>
-- <code title="delete /user/{username}">client.user.<a href="./src/petstore/resources/user.py">delete</a>(username) -> None</code>
-- <code title="post /user/createWithList">client.user.<a href="./src/petstore/resources/user.py">create_with_list</a>(\*\*<a href="src/petstore/types/user_create_with_list_params.py">params</a>) -> <a href="./src/petstore/types/user.py">User</a></code>
-- <code title="get /user/login">client.user.<a href="./src/petstore/resources/user.py">login</a>(\*\*<a href="src/petstore/types/user_login_params.py">params</a>) -> str</code>
-- <code title="get /user/logout">client.user.<a href="./src/petstore/resources/user.py">logout</a>() -> None</code>
+- <code title="post /user">client.User.<a href="https://pkg.go.dev/github.com/segphault/test#UserService.New">New</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, body <a href="https://pkg.go.dev/github.com/segphault/test">petstorefix</a>.<a href="https://pkg.go.dev/github.com/segphault/test#UserNewParams">UserNewParams</a>) <a href="https://pkg.go.dev/builtin#error">error</a></code>
+- <code title="get /user/{username}">client.User.<a href="https://pkg.go.dev/github.com/segphault/test#UserService.Get">Get</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, username <a href="https://pkg.go.dev/builtin#string">string</a>) (<a href="https://pkg.go.dev/github.com/segphault/test">petstorefix</a>.<a href="https://pkg.go.dev/github.com/segphault/test#User">User</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
+- <code title="put /user/{username}">client.User.<a href="https://pkg.go.dev/github.com/segphault/test#UserService.Update">Update</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, existingUsername <a href="https://pkg.go.dev/builtin#string">string</a>, body <a href="https://pkg.go.dev/github.com/segphault/test">petstorefix</a>.<a href="https://pkg.go.dev/github.com/segphault/test#UserUpdateParams">UserUpdateParams</a>) <a href="https://pkg.go.dev/builtin#error">error</a></code>
+- <code title="delete /user/{username}">client.User.<a href="https://pkg.go.dev/github.com/segphault/test#UserService.Delete">Delete</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, username <a href="https://pkg.go.dev/builtin#string">string</a>) <a href="https://pkg.go.dev/builtin#error">error</a></code>
+- <code title="post /user/createWithList">client.User.<a href="https://pkg.go.dev/github.com/segphault/test#UserService.NewWithList">NewWithList</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, body <a href="https://pkg.go.dev/github.com/segphault/test">petstorefix</a>.<a href="https://pkg.go.dev/github.com/segphault/test#UserNewWithListParams">UserNewWithListParams</a>) (<a href="https://pkg.go.dev/github.com/segphault/test">petstorefix</a>.<a href="https://pkg.go.dev/github.com/segphault/test#User">User</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
+- <code title="get /user/login">client.User.<a href="https://pkg.go.dev/github.com/segphault/test#UserService.Login">Login</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, query <a href="https://pkg.go.dev/github.com/segphault/test">petstorefix</a>.<a href="https://pkg.go.dev/github.com/segphault/test#UserLoginParams">UserLoginParams</a>) (<a href="https://pkg.go.dev/builtin#string">string</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
+- <code title="get /user/logout">client.User.<a href="https://pkg.go.dev/github.com/segphault/test#UserService.Logout">Logout</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>) <a href="https://pkg.go.dev/builtin#error">error</a></code>
