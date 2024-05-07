@@ -1,60 +1,67 @@
-# Shared
+# Shared Params Types
 
-Types:
+- <a href="https://pkg.go.dev/github.com/segphault/test/shared">shared</a>.<a href="https://pkg.go.dev/github.com/segphault/test/shared#OrderParam">OrderParam</a>
 
-- <code><a href="./src/resources/shared.ts">Order</a></code>
+# Shared Response Types
+
+- <a href="https://pkg.go.dev/github.com/segphault/test/shared">shared</a>.<a href="https://pkg.go.dev/github.com/segphault/test/shared#Order">Order</a>
 
 # Pets
 
-Types:
+Params Types:
 
-- <code><a href="./src/resources/pets.ts">APIResponse</a></code>
-- <code><a href="./src/resources/pets.ts">Pet</a></code>
-- <code><a href="./src/resources/pets.ts">PetFindByStatusResponse</a></code>
-- <code><a href="./src/resources/pets.ts">PetFindByTagsResponse</a></code>
+- <a href="https://pkg.go.dev/github.com/segphault/test">petstorefix</a>.<a href="https://pkg.go.dev/github.com/segphault/test#PetParam">PetParam</a>
+
+Response Types:
+
+- <a href="https://pkg.go.dev/github.com/segphault/test">petstorefix</a>.<a href="https://pkg.go.dev/github.com/segphault/test#APIResponse">APIResponse</a>
+- <a href="https://pkg.go.dev/github.com/segphault/test">petstorefix</a>.<a href="https://pkg.go.dev/github.com/segphault/test#Pet">Pet</a>
 
 Methods:
 
-- <code title="post /pet">client.pets.<a href="./src/resources/pets.ts">create</a>({ ...params }) -> Pet</code>
-- <code title="get /pet/{petId}">client.pets.<a href="./src/resources/pets.ts">retrieve</a>(petId) -> Pet</code>
-- <code title="put /pet">client.pets.<a href="./src/resources/pets.ts">update</a>({ ...params }) -> Pet</code>
-- <code title="delete /pet/{petId}">client.pets.<a href="./src/resources/pets.ts">delete</a>(petId) -> void</code>
-- <code title="get /pet/findByStatus">client.pets.<a href="./src/resources/pets.ts">findByStatus</a>({ ...params }) -> PetFindByStatusResponse</code>
-- <code title="get /pet/findByTags">client.pets.<a href="./src/resources/pets.ts">findByTags</a>({ ...params }) -> PetFindByTagsResponse</code>
-- <code title="post /pet/{petId}">client.pets.<a href="./src/resources/pets.ts">updateById</a>(petId, { ...params }) -> void</code>
-- <code title="post /pet/{petId}/uploadImage">client.pets.<a href="./src/resources/pets.ts">uploadImage</a>(petId, { ...params }) -> APIResponse</code>
+- <code title="post /pet">client.Pets.<a href="https://pkg.go.dev/github.com/segphault/test#PetService.New">New</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, body <a href="https://pkg.go.dev/github.com/segphault/test">petstorefix</a>.<a href="https://pkg.go.dev/github.com/segphault/test#PetNewParams">PetNewParams</a>) (<a href="https://pkg.go.dev/github.com/segphault/test">petstorefix</a>.<a href="https://pkg.go.dev/github.com/segphault/test#Pet">Pet</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
+- <code title="get /pet/{petId}">client.Pets.<a href="https://pkg.go.dev/github.com/segphault/test#PetService.Get">Get</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, petID <a href="https://pkg.go.dev/builtin#int64">int64</a>) (<a href="https://pkg.go.dev/github.com/segphault/test">petstorefix</a>.<a href="https://pkg.go.dev/github.com/segphault/test#Pet">Pet</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
+- <code title="put /pet">client.Pets.<a href="https://pkg.go.dev/github.com/segphault/test#PetService.Update">Update</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, body <a href="https://pkg.go.dev/github.com/segphault/test">petstorefix</a>.<a href="https://pkg.go.dev/github.com/segphault/test#PetUpdateParams">PetUpdateParams</a>) (<a href="https://pkg.go.dev/github.com/segphault/test">petstorefix</a>.<a href="https://pkg.go.dev/github.com/segphault/test#Pet">Pet</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
+- <code title="delete /pet/{petId}">client.Pets.<a href="https://pkg.go.dev/github.com/segphault/test#PetService.Delete">Delete</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, petID <a href="https://pkg.go.dev/builtin#int64">int64</a>) <a href="https://pkg.go.dev/builtin#error">error</a></code>
+- <code title="get /pet/findByStatus">client.Pets.<a href="https://pkg.go.dev/github.com/segphault/test#PetService.FindByStatus">FindByStatus</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, query <a href="https://pkg.go.dev/github.com/segphault/test">petstorefix</a>.<a href="https://pkg.go.dev/github.com/segphault/test#PetFindByStatusParams">PetFindByStatusParams</a>) ([]<a href="https://pkg.go.dev/github.com/segphault/test">petstorefix</a>.<a href="https://pkg.go.dev/github.com/segphault/test#Pet">Pet</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
+- <code title="get /pet/findByTags">client.Pets.<a href="https://pkg.go.dev/github.com/segphault/test#PetService.FindByTags">FindByTags</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, query <a href="https://pkg.go.dev/github.com/segphault/test">petstorefix</a>.<a href="https://pkg.go.dev/github.com/segphault/test#PetFindByTagsParams">PetFindByTagsParams</a>) ([]<a href="https://pkg.go.dev/github.com/segphault/test">petstorefix</a>.<a href="https://pkg.go.dev/github.com/segphault/test#Pet">Pet</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
+- <code title="post /pet/{petId}">client.Pets.<a href="https://pkg.go.dev/github.com/segphault/test#PetService.UpdateByID">UpdateByID</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, petID <a href="https://pkg.go.dev/builtin#int64">int64</a>, body <a href="https://pkg.go.dev/github.com/segphault/test">petstorefix</a>.<a href="https://pkg.go.dev/github.com/segphault/test#PetUpdateByIDParams">PetUpdateByIDParams</a>) <a href="https://pkg.go.dev/builtin#error">error</a></code>
+- <code title="post /pet/{petId}/uploadImage">client.Pets.<a href="https://pkg.go.dev/github.com/segphault/test#PetService.UploadImage">UploadImage</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, petID <a href="https://pkg.go.dev/builtin#int64">int64</a>, body <a href="https://pkg.go.dev/github.com/segphault/test">petstorefix</a>.<a href="https://pkg.go.dev/github.com/segphault/test#PetUploadImageParams">PetUploadImageParams</a>) (<a href="https://pkg.go.dev/github.com/segphault/test">petstorefix</a>.<a href="https://pkg.go.dev/github.com/segphault/test#APIResponse">APIResponse</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
 
 # Store
 
-Types:
+Response Types:
 
-- <code><a href="./src/resources/store/store.ts">StoreInventoryResponse</a></code>
+- <a href="https://pkg.go.dev/github.com/segphault/test">petstorefix</a>.<a href="https://pkg.go.dev/github.com/segphault/test#StoreInventoryResponse">StoreInventoryResponse</a>
 
 Methods:
 
-- <code title="post /store/order">client.store.<a href="./src/resources/store/store.ts">createOrder</a>({ ...params }) -> Order</code>
-- <code title="get /store/inventory">client.store.<a href="./src/resources/store/store.ts">inventory</a>() -> StoreInventoryResponse</code>
+- <code title="post /store/order">client.Store.<a href="https://pkg.go.dev/github.com/segphault/test#StoreService.NewOrder">NewOrder</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, body <a href="https://pkg.go.dev/github.com/segphault/test">petstorefix</a>.<a href="https://pkg.go.dev/github.com/segphault/test#StoreNewOrderParams">StoreNewOrderParams</a>) (<a href="https://pkg.go.dev/github.com/segphault/test/shared">shared</a>.<a href="https://pkg.go.dev/github.com/segphault/test/shared#Order">Order</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
+- <code title="get /store/inventory">client.Store.<a href="https://pkg.go.dev/github.com/segphault/test#StoreService.Inventory">Inventory</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>) (<a href="https://pkg.go.dev/github.com/segphault/test">petstorefix</a>.<a href="https://pkg.go.dev/github.com/segphault/test#StoreInventoryResponse">StoreInventoryResponse</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
 
 ## Order
 
 Methods:
 
-- <code title="get /store/order/{orderId}">client.store.order.<a href="./src/resources/store/order.ts">retrieve</a>(orderId) -> Order</code>
-- <code title="delete /store/order/{orderId}">client.store.order.<a href="./src/resources/store/order.ts">deleteOrder</a>(orderId) -> void</code>
+- <code title="get /store/order/{orderId}">client.Store.Order.<a href="https://pkg.go.dev/github.com/segphault/test#StoreOrderService.Get">Get</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, orderID <a href="https://pkg.go.dev/builtin#int64">int64</a>) (<a href="https://pkg.go.dev/github.com/segphault/test/shared">shared</a>.<a href="https://pkg.go.dev/github.com/segphault/test/shared#Order">Order</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
+- <code title="delete /store/order/{orderId}">client.Store.Order.<a href="https://pkg.go.dev/github.com/segphault/test#StoreOrderService.DeleteOrder">DeleteOrder</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, orderID <a href="https://pkg.go.dev/builtin#int64">int64</a>) <a href="https://pkg.go.dev/builtin#error">error</a></code>
 
 # User
 
-Types:
+Params Types:
 
-- <code><a href="./src/resources/user.ts">User</a></code>
-- <code><a href="./src/resources/user.ts">UserLoginResponse</a></code>
+- <a href="https://pkg.go.dev/github.com/segphault/test">petstorefix</a>.<a href="https://pkg.go.dev/github.com/segphault/test#UserParam">UserParam</a>
+
+Response Types:
+
+- <a href="https://pkg.go.dev/github.com/segphault/test">petstorefix</a>.<a href="https://pkg.go.dev/github.com/segphault/test#User">User</a>
 
 Methods:
 
-- <code title="post /user">client.user.<a href="./src/resources/user.ts">create</a>({ ...params }) -> void</code>
-- <code title="get /user/{username}">client.user.<a href="./src/resources/user.ts">retrieve</a>(username) -> User</code>
-- <code title="put /user/{username}">client.user.<a href="./src/resources/user.ts">update</a>(existingUsername, { ...params }) -> void</code>
-- <code title="delete /user/{username}">client.user.<a href="./src/resources/user.ts">delete</a>(username) -> void</code>
-- <code title="post /user/createWithList">client.user.<a href="./src/resources/user.ts">createWithList</a>([ ...items ]) -> User</code>
-- <code title="get /user/login">client.user.<a href="./src/resources/user.ts">login</a>({ ...params }) -> string</code>
-- <code title="get /user/logout">client.user.<a href="./src/resources/user.ts">logout</a>() -> void</code>
+- <code title="post /user">client.User.<a href="https://pkg.go.dev/github.com/segphault/test#UserService.New">New</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, body <a href="https://pkg.go.dev/github.com/segphault/test">petstorefix</a>.<a href="https://pkg.go.dev/github.com/segphault/test#UserNewParams">UserNewParams</a>) <a href="https://pkg.go.dev/builtin#error">error</a></code>
+- <code title="get /user/{username}">client.User.<a href="https://pkg.go.dev/github.com/segphault/test#UserService.Get">Get</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, username <a href="https://pkg.go.dev/builtin#string">string</a>) (<a href="https://pkg.go.dev/github.com/segphault/test">petstorefix</a>.<a href="https://pkg.go.dev/github.com/segphault/test#User">User</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
+- <code title="put /user/{username}">client.User.<a href="https://pkg.go.dev/github.com/segphault/test#UserService.Update">Update</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, existingUsername <a href="https://pkg.go.dev/builtin#string">string</a>, body <a href="https://pkg.go.dev/github.com/segphault/test">petstorefix</a>.<a href="https://pkg.go.dev/github.com/segphault/test#UserUpdateParams">UserUpdateParams</a>) <a href="https://pkg.go.dev/builtin#error">error</a></code>
+- <code title="delete /user/{username}">client.User.<a href="https://pkg.go.dev/github.com/segphault/test#UserService.Delete">Delete</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, username <a href="https://pkg.go.dev/builtin#string">string</a>) <a href="https://pkg.go.dev/builtin#error">error</a></code>
+- <code title="post /user/createWithList">client.User.<a href="https://pkg.go.dev/github.com/segphault/test#UserService.NewWithList">NewWithList</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, body <a href="https://pkg.go.dev/github.com/segphault/test">petstorefix</a>.<a href="https://pkg.go.dev/github.com/segphault/test#UserNewWithListParams">UserNewWithListParams</a>) (<a href="https://pkg.go.dev/github.com/segphault/test">petstorefix</a>.<a href="https://pkg.go.dev/github.com/segphault/test#User">User</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
+- <code title="get /user/login">client.User.<a href="https://pkg.go.dev/github.com/segphault/test#UserService.Login">Login</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, query <a href="https://pkg.go.dev/github.com/segphault/test">petstorefix</a>.<a href="https://pkg.go.dev/github.com/segphault/test#UserLoginParams">UserLoginParams</a>) (<a href="https://pkg.go.dev/builtin#string">string</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
+- <code title="get /user/logout">client.User.<a href="https://pkg.go.dev/github.com/segphault/test#UserService.Logout">Logout</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>) <a href="https://pkg.go.dev/builtin#error">error</a></code>
