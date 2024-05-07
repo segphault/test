@@ -16,18 +16,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
+      - name: Setup go
+        uses: actions/setup-go@v5
 
-      - name: Install dependencies
-        run: |
-          yarn install
-
-      - name: Check types
-        run: |
-          yarn build
+      - run: |
+          go build ./...
   test:
     name: test
     runs-on: ubuntu-latest
@@ -35,10 +28,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
+      - name: Setup go
+        uses: actions/setup-go@v5
 
       - name: Bootstrap
         run: ./scripts/bootstrap
